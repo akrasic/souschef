@@ -1,5 +1,7 @@
-require "souschef/version"
-
-module Souschef
-  # Your code goes here...
-end
+require 'yaml'
+require 'open3'
+require 'trollop'
+require 'colorize'
+require 'souschef/slave'
+require 'souschef/board'
+require 'souschef/version'
