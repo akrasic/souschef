@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
 #	souschef - Chef developemnt helper
-
 $:.unshift(File.join(File.dirname(__FILE__), "/../lib"))
 require 'souschef'
 
@@ -8,18 +7,21 @@ options = Trollop::Parser.new do
   version "SousChef #{Souschef::VERSION}"
 
   opt :cookbook, 'Name of your cookbook', type: :string
-  opt :driver, 'Virtualbox or docker', default: 'virtualbox'
+  opt :docker, 'Enable Docker for TestKitchen'
   opt :verbose, 'Print out detailed information'
 end
 
 opts = Trollop::with_standard_exception_handling options do
-  raise Trollop::HelpNeeded if ARGV.empty?
+  fail Trollop::HelpNeeded if ARGV.empty?
   options.parse ARGV
 end
 
 begin
   Souschef::Berkshelf.new(opts).berks_create
-
-rescue Exception => e
-  puts ">>> #{e}".colorize(:red)
+  Souschef::Gemfile.new(opts)
+  Souschef::Testkitchen.new(opts).configure
+  Souschef::Rubocop.create(opts)
+  Souschef::Spec.create(opts)
+rescue RuntimeError => e
+  Souschef::Print.error e
 end
