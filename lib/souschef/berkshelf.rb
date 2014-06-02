@@ -13,9 +13,11 @@ module Souschef
     #
     # Returns nil
     def berks_create
+      Souschef::Print.info "Creating cookbook structure"
       check_cookbook_dir
-      info_msg("Berkshelf create #{@opts[:cookbook]} cookbook")
       i, o, e, w = Open3.popen3(@berks, 'cookbook', @opts[:cookbook])
+      i.close
+      e.close
       print_open3_stdout(o) if @opts[:verbose]
       raise 'Berks failed' unless w.value == 0
     end
