@@ -1,5 +1,23 @@
 ---
-:source: http://geminfo.org
+:source:
+- https://rubygems.org
 :general:
-  - vagrant
-  - berkshelf
+- :name: chefspec
+  :version: "~> 3"
+- :name: berkshelf
+  :version: "~> 3"
+- rake
+- rubocop
+- foodcritic
+:group:
+- :group_name: development
+  :gems:
+  - :name: vagrant-berkshelf
+    :git: berkshelf/vagrant-berkshelf
+  - :name: vagrant-omnibus
+    :git: schisamo/vagrant-omnibus
+- :group_name: integration
+  :gems:
+  - test-kitchen
+  - kitchen-vagrant
+  - kitchen-docker
