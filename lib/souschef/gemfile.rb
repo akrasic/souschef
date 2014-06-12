@@ -1,6 +1,6 @@
 module Souschef
   # Gemfile generator
-  class Gemfile < Ruth::Gemfile
+  class Gemfile < Ruth::Gemfile::Yaml
     attr_accessor :cwd, :dir
 
     def initialize(opts)
@@ -12,6 +12,7 @@ module Souschef
       yaml_file = File.expand_path('../../../data/gemfile.yml', __FILE__)
 
       super(yaml_file)
+      output
     end
   end
 end
