@@ -8,7 +8,10 @@ options = Trollop::Parser.new do
 
   opt :cookbook, 'Name of your cookbook', type: :string
   opt :docker, 'Enable Docker for TestKitchen'
+  opt :solusvm, 'Enable SoulsVM driver for TestKitchen'
   opt :verbose, 'Print out detailed information'
+  opt :scaffold, 'Create recipe, chefspec and serverspec files for recipe'
+  opt :recipe, 'Recipe name, used along with --scaffold', type: :string
 end
 
 opts = Trollop::with_standard_exception_handling options do
@@ -17,11 +20,15 @@ opts = Trollop::with_standard_exception_handling options do
 end
 
 begin
-  Souschef::Berkshelf.new(opts).berks_create
-  Souschef::Gemfile.new(opts)
-  Souschef::Testkitchen.new(opts).configure
-  Souschef::Rubocop.create(opts)
-  Souschef::Spec.create(opts)
+  if opts[:scaffold]
+    Souschef::Scaffold.new(opts).start
+  else
+    Souschef::Berkshelf.new(opts).berks_create
+    Souschef::Gemfile.new(opts)
+    Souschef::Testkitchen.new(opts).configure
+    Souschef::Rubocop.create(opts)
+    Souschef::Spec.create(opts)
+  end
 rescue RuntimeError => e
   Souschef::Print.error e
 end
