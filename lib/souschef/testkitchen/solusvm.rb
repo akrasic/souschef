@@ -61,7 +61,7 @@ module Souschef
                                'node' => 'chefsolushv',
                                'privileged' => 'true',
                                'type' => 'xen',
-                               'platform': 'centos',
+                               'platform' => 'centos',
                                'use_sudo' => 'false',
                                'username' => 'internal'   } }
       end
@@ -76,7 +76,7 @@ module Souschef
                                'node' => 'chefsolushv',
                                'privileged' => 'true',
                                'type' => 'xen',
-                               'platform': 'centos',
+                               'platform' => 'centos',
                                'use_sudo' => 'false',
                                'username' => 'internal'   } }
       end
