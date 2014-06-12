@@ -20,6 +20,10 @@ module Souschef
         Souschef::Print.info 'Creating Docker configuration in .kitchen.local.yml'
         write(:docker, Souschef::Testkitchen::Docker.new(@cookbook).yaml)
       end
+      if @opts[:solusvm]
+        Souschef::Print.info 'Creating SolusVM configuraton in .kitchen.local.yml'
+        write(:solusvm, Souschef::Testkitchen::Solusvm.new(@cookbook).yaml)
+      end
 
         Souschef::Print.info 'Creating Virtualbox configuration in .kitchen.yml'
       write(:virtualbox, Souschef::Testkitchen::Virtualbox.new(@cookbook).yaml)
