@@ -1,3 +1,4 @@
+require 'erb'
 require 'yaml'
 require 'open3'
 require 'trollop'
