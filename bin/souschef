@@ -24,7 +24,7 @@ begin
     Souschef::Scaffold.new(opts).start
   else
     Souschef::Berkshelf.new(opts).berks_create
-    Souschef::Gemfile.new(opts)
+    Souschef::Gemfile.new(opts).write
     Souschef::Testkitchen.new(opts).configure
     Souschef::Rubocop.create(opts)
     Souschef::Spec.create(opts)
