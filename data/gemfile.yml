@@ -3,7 +3,7 @@
 - https://rubygems.org
 :general:
 - :name: chefspec
-  :version: "~> 3"
+  :version: "~> 4"
 - :name: berkshelf
   :version: "~> 3"
 - rake
@@ -13,9 +13,9 @@
 - :group_name: development
   :gems:
   - :name: vagrant-berkshelf
-    :git: berkshelf/vagrant-berkshelf
+    :github: berkshelf/vagrant-berkshelf
   - :name: vagrant-omnibus
-    :git: schisamo/vagrant-omnibus
+    :github: schisamo/vagrant-omnibus
 - :group_name: integration
   :gems:
   - test-kitchen
