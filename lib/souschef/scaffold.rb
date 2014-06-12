@@ -31,9 +31,7 @@ module Souschef
     #
     # Return inl
     def process_templates
-      %w( recipe serverspec chefspec ).each do |type|
-        create_recipe_file(type)
-      end
+      %w( recipe serverspec chefspec ).each { |type| create_recipe_file(type) }
     end
 
     # Private - Creates recipe file based on the input
