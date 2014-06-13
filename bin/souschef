@@ -28,6 +28,7 @@ begin
     Souschef::Testkitchen.new(opts).configure
     Souschef::Rubocop.create(opts)
     Souschef::Spec.create(opts)
+    Souschef::Template.run(opts[:cookbook])
   end
 rescue RuntimeError => e
   Souschef::Print.error e
