@@ -1,15 +1,16 @@
+require 'chef/cookbook/metadata'
 require 'fileutils'
-require 'erb'
 
 module Souschef
   # Automagically create needed files
   class Scaffold
-    attr_accessor :opts, :dir, :recipe, :recipe_file, :templtes
+    attr_accessor :opts, :dir, :recipe, :recipe_file, :cookbook, :metadata
 
     def initialize(opts)
       @opts = opts
       @dir = Dir.pwd
       @templates = return_templates
+      metadata_info
     end
 
     def start
@@ -27,6 +28,15 @@ module Souschef
       fail 'Please specify the recipe name' if @opts[:recipe].nil?
     end
 
+    # Private - Read Chef metadata
+    #
+    # Returns String
+    def metadata_info
+      meta = File.join(Dir.pwd, 'metadata.rb')
+      @metadata = Chef::Cookbook::Metadata.new
+      @metadata.from_file(meta)
+    end
+
     # Private - Process tempaltes
     #
     # Return inl
@@ -40,6 +50,9 @@ module Souschef
     def create_recipe_file(type)
       rfile = ERB.new(File.read(return_templates[type.to_sym]))
       @recipe = @opts[:recipe]
+      @cookbook = @metadata.name
+      @maintainer = @metadata.maintainer
+      @year = Time.now.year
 
       data = rfile.result(binding)
 
