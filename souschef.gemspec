@@ -22,4 +22,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_dependency 'ruth'
   spec.add_dependency 'colorize'
+  spec.add_dependency 'chef'
+  spec.add_dependency 'berkshelf'
+  spec.add_dependency 'test-kitchen'
+  spec.add_dependency 'rubocop'
+  spec.add_dependency 'foodcritic'
+  spec.add_dependency 'chefspec', '~> 4'
+  spec.add_dependency 'serverspec', '~> 3'
 end
