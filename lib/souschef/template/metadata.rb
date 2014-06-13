@@ -11,7 +11,7 @@ module Souschef
       #
       # Returns nil
       def create(cookbook)
-        tmpl = ERB.new(File.read(datafile_path('metadata.erb')))
+        tmpl = ERB.new(load_erb_file('metadata.erb'))
         @cookbook = cookbook
         data = tmpl.result(binding)
 

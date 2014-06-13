@@ -8,7 +8,7 @@ module Souschef
       #
       # Return String
       def datafile_path(file)
-        p = "../../../data/#{file}"
+        p = "../../../../data/#{file}"
         File.expand_path(p, __FILE__)
       end
 
@@ -24,6 +24,15 @@ module Souschef
       # Returns nil
       def write_file(file, data)
         File.open(file, 'w') { |fd| fd.write(data) }
+      end
+
+      # Private - Load ERB template
+      #
+      # file - String file name
+      #
+      # Returns String
+      def load_erb_file(file)
+        File.read(datafile_path(file))
       end
     end
   end
