@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Souschef::VERSION
   spec.authors       = ["Antun Krasic"]
   spec.email         = ["antun@martuna.co"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Chef cookbook helper}
+  spec.description   = %q{Chef helper to get you started fast}
+  spec.homepage      = "http://interwebz.com/404/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
