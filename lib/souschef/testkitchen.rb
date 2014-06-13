@@ -26,7 +26,7 @@ module Souschef
         write(:solusvm, Souschef::Testkitchen::Solusvm.new(@cookbook).yaml)
       end
 
-      Souschef::Print.info 'Creating Virtualbox configuration in .kitchen.yml'
+      Souschef::Print.info 'Creating Vagrant configuration in .kitchen.yml'
       write(:virtualbox, Souschef::Testkitchen::Virtualbox.new(@cookbook).yaml)
     end
 
