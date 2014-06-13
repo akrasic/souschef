@@ -1,12 +1,10 @@
 module Souschef
   # Includes slave functions that do all the work
   class Berkshelf
-    attr_accessor :cwd, :opts, :berks
+    attr_accessor :opts
 
     def initialize(opts)
-      @cwd = Dir.pwd
       @opts = opts
-      @berks = which_berks
     end
 
     # Public - Tell Berkshelf to create a cookbook
@@ -15,7 +13,7 @@ module Souschef
     def berks_create
       Souschef::Print.info "Creating cookbook structure"
       check_cookbook_dir
-      i, o, e, w = Open3.popen3(@berks, 'cookbook', @opts[:cookbook])
+      i, o, e, w = Open3.popen3(which_berks, 'cookbook', @opts[:cookbook])
       i.close
       e.close
       print_open3_stdout(o) if @opts[:verbose]
@@ -69,7 +67,7 @@ module Souschef
     #
     # Returns nil
     def check_cookbook_dir
-      if File.directory?("#{cwd}/#{@opts[:cookbook]}")
+      if File.directory?("#{Dir.pwd}/#{@opts[:cookbook]}")
         raise "Cookbook directory #{@opts[:cookbook]}  already exists"
       end
     end
