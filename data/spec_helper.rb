@@ -1,6 +1,8 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-# RSpec configuration
-# RSpec.configure do |config|
-# end
+RSpec.configure do |config|
+    config.color = true
+end
+
+at_exit { ChefSpec::Coverage.report! }
