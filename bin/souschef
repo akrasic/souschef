@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #	souschef - Chef developemnt helper
-$:.unshift(File.join(File.dirname(__FILE__), "/../lib"))
+$LOAD_PATH << File.join(File.dirname(__FILE__), '../lib')
 require 'souschef'
 
 options = Trollop::Parser.new do
@@ -14,7 +14,7 @@ options = Trollop::Parser.new do
   opt :recipe, 'Recipe name, used along with --scaffold', type: :string
 end
 
-opts = Trollop::with_standard_exception_handling options do
+opts = Trollop.with_standard_exception_handling options do
   fail Trollop::HelpNeeded if ARGV.empty?
   options.parse ARGV
 end
