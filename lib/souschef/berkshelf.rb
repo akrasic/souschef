@@ -31,6 +31,14 @@ module Souschef
       File.delete(readme) if File.exist?(readme)
     end
 
+    # Private - Remove README from cookbook dir
+    #
+    # Returns nil
+    def remove_vagrantfile
+      vagrantfile = File.join(Dir.pwd, @opts[:cookbook], 'Vagrantfile')
+      File.delete(vagrantfile) if File.exist?(vagrantfile)
+    end
+
     # Private - Obtain berks executable full path
     #
     # Returns String
