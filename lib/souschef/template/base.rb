@@ -34,6 +34,14 @@ module Souschef
       def load_erb_file(file)
         File.read(datafile_path(file))
       end
+
+      # Private - Creates spec/ directory if missing
+      #
+      # Return nil
+      def create_spec_dir(spec_dir)
+        Souschef::Print.info "Create #{spec_dir} directory"
+        Dir.mkdir(spec_dir)
+      end
     end
   end
 end
