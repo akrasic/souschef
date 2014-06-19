@@ -1,5 +1,6 @@
 module Souschef
   class Template
+    # Create spechelper for Chefspec
     class Spechelper < Souschef::Template::Base
       # Public - Create spec/spec_helper.rb file
       #
@@ -16,16 +17,6 @@ module Souschef
 
         Souschef::Print.info 'Creating Chefspec helper'
         write_file(cookbook_file_path(cookbook, 'spec/spec_helper.rb'), data)
-      end
-
-      private
-
-      # Private - Creates spec/ directory if missing
-      #
-      # Return nil
-      def create_spec_dir(spec_dir)
-        Souschef::Print.info 'Create spec/ directory'
-        Dir.mkdir(spec_dir)
       end
     end
   end
