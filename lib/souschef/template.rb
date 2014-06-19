@@ -5,6 +5,7 @@ require 'souschef/template/readme'
 require 'souschef/template/rubocop'
 require 'souschef/template/spec_helper'
 require 'souschef/template/serverspec'
+require 'souschef/template/rakefile'
 
 module Souschef
   # Creates various files from predefined templates
@@ -19,6 +20,7 @@ module Souschef
       Souschef::Template::Metadata.new.create(cookbook)
       Souschef::Template::License.new.create(cookbook)
       Souschef::Template::Readme.new.create(cookbook)
+      Souschef::Template::Rakefile.new.create(cookbook)
     end
   end
 end
