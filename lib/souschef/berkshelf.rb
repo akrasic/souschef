@@ -11,6 +11,7 @@ module Souschef
     #
     # Returns nil
     def berks_create
+      remove_old_readme
       Souschef::Print.info "Creating cookbook structure"
       check_cookbook_dir
       i, o, e, w = Open3.popen3(which_berks, 'cookbook', @opts[:cookbook])
@@ -21,6 +22,14 @@ module Souschef
     end
 
     private
+
+    # Private - Remove README from cookbook dir
+    #
+    # Returns nil
+    def remove_old_readme
+      readme = File.join(Dir.pwd, @opts[:cookbook], 'README.md')
+      File.delete(readme) if File.exist?(readme)
+    end
 
     # Private - Obtain berks executable full path
     #
@@ -68,7 +77,7 @@ module Souschef
     # Returns nil
     def check_cookbook_dir
       if File.directory?("#{Dir.pwd}/#{@opts[:cookbook]}")
-        raise "Cookbook directory #{@opts[:cookbook]}  already exists"
+        Souschef::Print.info "Cookbook directory #{@opts[:cookbook]} exists"
       end
     end
 
