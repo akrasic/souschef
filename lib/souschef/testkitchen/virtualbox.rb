@@ -25,30 +25,33 @@ module Souschef
         @config = { 'driver' => define_driver,
                     'provisioner' => define_provisioner,
                     'platforms' => define_platforms,
-                    'suits' => define_suits }
+                    'suites' => define_suits }
       end
 
       # Private - Define driver section
       #
       # Returns Hash
       def define_driver
-        { 'name' => 'vagrant' }
+        { 'name' => 'vagrant',
+          'customize' => { 'memory' => 1024 } }
       end
 
       # Private - Define provisioner
       #
       # Returns Hash
       def define_provisioner
-        { 'name' => 'chef-zero' }
+        { 'name' => 'chef_zero',
+          'require_chef_omnibus' => 'latest' }
       end
 
       # Private - Define Platform
       #
       # Returns Hash
       def define_platforms
-        [{ 'name' => 'centos-5.10' },
-         { 'name' => 'centos-6.4' },
-         'run_list' => 'nil']
+        [{ 'name' => 'centos-5.10',
+           'driver_config' => { 'box' => 'centos-5.10-min-x86_64' } },
+         { 'name' => 'centos-6.4',
+           'driver_config' => { 'box' => 'centos-6.5-x86_64' } }]
       end
 
       # Private - Define suits
