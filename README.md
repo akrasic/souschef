@@ -5,10 +5,14 @@ Souschef is a helper script to aid with starting a developing Chef cookbook by a
 Cookbook creation uses following steps:
 - Using Berkshelf to create the cookbook structure
 - Populates the `Gemfile`, `.kitchen.yml`, `.rubocop.yml`
-- Adjusts the `metadata.rb`, `README` and `LICENSE˙
+- Adjusts the `metadata.rb`, `README` and `LICENSE`
 - Configured directorie and places `spec_helper.rb` for Chefspec and Serverspec
 - Adds `Rakefile` which runs Foodcritic, Rubocop, RSpec and TestKitchecn tests 
 
+Souschef also can create new recipe and spec test files for you:
+- file under `recipes/` directory
+- file under `spec/unit/` directory
+- file under `test/integration/default/serverspec/localhost/` directory
 ## Installation
 Clone this repository and do:
 `gem build souschef.gemspec`
@@ -21,6 +25,7 @@ Currently available options:
 ```
 Options:
   --cookbook, -c <s>:   Name of your cookbook
+      --path, -p <s>:   Define cookbook directory path (relative)
         --docker, -d:   Enable Docker for TestKitchen
        --solusvm, -s:   Enable SoulsVM driver for TestKitchen
        --verbose, -v:   Print out detailed information
@@ -30,6 +35,16 @@ Options:
           --help, -h:   Show this message
 
 ```
+
+# Example usage
+**Create cookbook in current directory**
+`souschef --cookbook mycb --verbose`
+
+**Create cookbook in a subfolder of current directory**
+`souschef --cookbook mycb --path subdir --verbose`
+
+**Use scaffold to get you started writing a new recipe and tests**
+`souschef --scaffold --recipe install`
 
 ## Contributing
 
