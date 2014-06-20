@@ -38,12 +38,15 @@ Options:
 
 # Example usage
 **Create cookbook in current directory**
+
 `souschef --cookbook mycb --verbose`
 
 **Create cookbook in a subfolder of current directory**
+
 `souschef --cookbook mycb --path subdir --verbose`
 
 **Use scaffold to get you started writing a new recipe and tests**
+
 `souschef --scaffold --recipe install`
 
 ## Contributing
