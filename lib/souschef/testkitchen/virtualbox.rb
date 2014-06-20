@@ -59,8 +59,7 @@ module Souschef
       # Returns Hash
       def define_suits
         [{ 'name' => 'default',
-           'run_list' => ["recipe[#{@cookbook}::default]"],
-           'attributes' => 'nil' }]
+           'run_list' => ["recipe[#{@cookbook}::default]"] }]
       end
     end
   end
