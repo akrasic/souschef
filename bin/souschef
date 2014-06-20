@@ -7,6 +7,7 @@ options = Trollop::Parser.new do
   version "SousChef #{Souschef::VERSION}"
 
   opt :cookbook, 'Name of your cookbook', type: :string
+  opt :path, 'Define cookbook directory path (relative)', type: :string
   opt :docker, 'Enable Docker for TestKitchen'
   opt :solusvm, 'Enable SoulsVM driver for TestKitchen'
   opt :verbose, 'Print out detailed information'
@@ -20,13 +21,19 @@ opts = Trollop.with_standard_exception_handling options do
 end
 
 begin
+  if opts[:path]
+    opts[:path] = File.join(Dir.pwd, opts[:path])
+  else
+    opts[:path] = Dir.pwd
+  end
+
   if opts[:scaffold]
     Souschef::Scaffold.new(opts).start
   else
     Souschef::Berkshelf.new(opts).berks_create
     Souschef::Gemfile.new(opts).write
     Souschef::Testkitchen.new(opts).configure
-    Souschef::Template.run(opts[:cookbook])
+    Souschef::Template.run(opts)
   end
 rescue RuntimeError => e
   Souschef::Print.error e
