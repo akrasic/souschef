@@ -5,18 +5,22 @@ module Souschef
     class Metadata < Souschef::Template::Base
       attr_accessor :cookbook
 
+      def initialize(opts)
+        super(opts)
+      end
+
       # Public - Create file start
       #
       # cookbook - String cookbook name
       #
       # Returns nil
-      def create(cookbook)
+      def create
         tmpl = ERB.new(load_erb_file('metadata.erb'))
         @cookbook = cookbook
         data = tmpl.result(binding)
 
         Souschef::Print.info 'Updating metadata.rb'
-        write_file(cookbook_file_path(cookbook, 'metadata.rb'), data)
+        write_file(cookbook_file_path('metadata.rb'), data)
       end
     end
   end

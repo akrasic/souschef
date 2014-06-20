@@ -36,9 +36,9 @@ module Souschef
     #
     # Returns Hash
     def kitchen_driver_file
-      { virtualbox: "#{Dir.pwd}/#{@cookbook}/.kitchen.yml",
-        docker: "#{Dir.pwd}/#{@cookbook}/.kitchen.local.yml",
-        solusvm: "#{Dir.pwd}/#{@cookbook}/.kitchen.local.yml"
+      { virtualbox: File.join(@opts[:path], '.kitchen.yml'),
+        docker: File.join(@opts[:path], '.kitchen.local.yml'),
+        solusvm: File.join(@opts[:path], '.kitchen.local.yml')
       }
     end
 

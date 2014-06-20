@@ -29,7 +29,7 @@ module Souschef
     #
     # Returns string
     def gemfile_location
-      File.join(Dir.pwd, @opts[:cookbook], 'Gemfile')
+      File.join(@opts[:path], 'Gemfile')
     end
 
     # Private - Write Gemfile data

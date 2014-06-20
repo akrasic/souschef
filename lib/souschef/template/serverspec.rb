@@ -2,14 +2,17 @@ module Souschef
   class Template
     # Serverspec configurator
     class Serverspec < Souschef::Template::Base
+      def initialize(opts)
+        super(opts)
+      end
       # Public - Create serverspec helper
       #
       # cookbook - String Cookbook name
       #
       # Returns nil
-      def create(cookbook)
-        spec_dir = File.join(Dir.pwd, cookbook, 'test', 'integration',
-                             'default', 'serverspec')
+      def create
+        spec_dir = File.join(@path, 'test', 'integration', 'default',
+                             'serverspec')
         spec_helper = File.join(spec_dir, 'spec_helper.rb')
 
         tmpl = ERB.new(load_erb_file('serverspec_helper.rb'))

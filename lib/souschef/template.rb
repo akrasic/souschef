@@ -13,14 +13,14 @@ module Souschef
     # Public - Create needed standardised files
     #
     # Returns nil
-    def self.run(cookbook)
-      Souschef::Template::Rubocop.new.create(cookbook)
-      Souschef::Template::Spechelper.new.create(cookbook)
-      Souschef::Template::Serverspec.new.create(cookbook)
-      Souschef::Template::Metadata.new.create(cookbook)
-      Souschef::Template::License.new.create(cookbook)
-      Souschef::Template::Readme.new.create(cookbook)
-      Souschef::Template::Rakefile.new.create(cookbook)
+    def self.run(opts)
+      Souschef::Template::Rubocop.new(opts).create
+      Souschef::Template::Spechelper.new(opts).create
+      Souschef::Template::Serverspec.new(opts).create
+      Souschef::Template::Metadata.new(opts).create
+      Souschef::Template::License.new(opts).create
+      Souschef::Template::Readme.new(opts).create
+      Souschef::Template::Rakefile.new(opts).create
     end
   end
 end

@@ -32,7 +32,7 @@ module Souschef
     #
     # Returns String
     def metadata_info
-      meta = File.join(Dir.pwd, 'metadata.rb')
+      meta = File.join(@opts[:path], 'metadata.rb')
       @metadata = Chef::Cookbook::Metadata.new
       @metadata.from_file(meta)
     end
@@ -74,10 +74,10 @@ module Souschef
     #
     # Returns Hash
     def return_directories
-      { recipe: File.join(Dir.pwd, 'recipes'),
-        serverspec: File.join(Dir.pwd, 'test', 'integration', 'serverspec',
+      { recipe: File.join(@opts[:path], 'recipes'),
+        serverspec: File.join(@opts[:path], 'test', 'integration', 'serverspec',
                               'localhost'),
-        chefspec: File.join(Dir.pwd, 'spec', 'unit') }
+        chefspec: File.join(@opts[:path], 'spec', 'unit') }
     end
 
     # Private - Get path to the recipes file
@@ -86,12 +86,12 @@ module Souschef
     def return_file_location(type)
       case type
       when 'recipe'
-        File.join(Dir.pwd, 'recipes', "#{@opts[:recipe]}.rb")
+        File.join(@opts[:path], 'recipes', "#{@opts[:recipe]}.rb")
       when 'serverspec'
-        File.join(Dir.pwd, 'test', 'integration', 'serverspec', 'localhost',
-                  "#{opts[:recipe]}_spec.rb")
+        File.join(@opts[:path], 'test', 'integration', 'serverspec',
+                  'localhost', "#{opts[:recipe]}_spec.rb")
       when 'chefspec'
-        File.join(Dir.pwd, 'spec', 'unit', "#{opts[:recipe]}_spec.rb")
+        File.join(@opts[:path], 'spec', 'unit', "#{opts[:recipe]}_spec.rb")
       end
     end
 
@@ -109,7 +109,7 @@ module Souschef
     #
     # Return nil
     def check_for_metadata
-      meta = File.join(Dir.pwd, 'metadata.rb')
+      meta = File.join(@opts[:path], 'metadata.rb')
       fail 'Please return to the root of your cookbook' unless File.exist?(meta)
     end
 
