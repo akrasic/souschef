@@ -75,8 +75,8 @@ module Souschef
     # Returns Hash
     def return_directories
       { recipe: File.join(@opts[:path], 'recipes'),
-        serverspec: File.join(@opts[:path], 'test', 'integration', 'serverspec',
-                              'localhost'),
+        serverspec: File.join(@opts[:path], 'test', 'integration', 'default',
+                              'serverspec', 'localhost'),
         chefspec: File.join(@opts[:path], 'spec', 'unit') }
     end
 
@@ -86,12 +86,11 @@ module Souschef
     def return_file_location(type)
       case type
       when 'recipe'
-        File.join(@opts[:path], 'recipes', "#{@opts[:recipe]}.rb")
+        File.join(return_directories[:recipe], "#{@opts[:recipe]}.rb")
       when 'serverspec'
-        File.join(@opts[:path], 'test', 'integration', 'serverspec',
-                  'localhost', "#{opts[:recipe]}_spec.rb")
+        File.join(return_directories[:serverspec], "#{opts[:recipe]}_spec.rb")
       when 'chefspec'
-        File.join(@opts[:path], 'spec', 'unit', "#{opts[:recipe]}_spec.rb")
+        File.join(return_directories[:chefspec], "#{@opts[:recipe]}_spec.rb")
       end
     end
 

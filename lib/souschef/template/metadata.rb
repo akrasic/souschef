@@ -16,7 +16,7 @@ module Souschef
       # Returns nil
       def create
         tmpl = ERB.new(load_erb_file('metadata.erb'))
-        @cookbook = cookbook
+        @cookbook = @opts[:cookbook]
         data = tmpl.result(binding)
 
         Souschef::Print.info 'Updating metadata.rb'
