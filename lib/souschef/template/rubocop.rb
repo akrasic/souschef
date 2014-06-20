@@ -2,17 +2,20 @@ module Souschef
   class Template
     # Configure Rubocop configuratiopn
     class Rubocop < Souschef::Template::Base
+      def initialize(opts)
+        super(opts)
+      end
       # Public - Create a .rubocop file
       #
       # cookbook - String Cookbook name
       #
       # Returns nil
-      def create(cookbook)
+      def create
         tmpl = ERB.new(load_erb_file('rubocop.yml'))
         data = tmpl.result(binding)
 
         Souschef::Print.info 'Setting up Rubocop configuration'
-        write_file(cookbook_file_path(cookbook, '.rubocop.yml'), data)
+        write_file(cookbook_file_path('.rubocop.yml'), data)
       end
     end
   end

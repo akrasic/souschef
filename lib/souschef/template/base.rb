@@ -2,6 +2,13 @@ module Souschef
   class Template
     # Base class containing reusable functions
     class Base
+      attr_accessor :path, :ots
+
+      def initialize(opts)
+        @opts = opts
+        @path = opts[:path]
+      end
+
       private
 
       # Private - Return location of file inside data/ directory
@@ -15,8 +22,8 @@ module Souschef
       # Private - Return path to the file inside cookbook directory
       #
       # Return String
-      def cookbook_file_path(cookbook, file)
-        File.join(Dir.pwd, cookbook, file)
+      def cookbook_file_path(file)
+        File.join(@path, file)
       end
 
       # Private - Write data to the desired file

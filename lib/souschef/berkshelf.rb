@@ -5,7 +5,6 @@ module Souschef
 
     def initialize(opts)
       @opts = opts
-      @cookbook_dir = File.join(Dir.pwd, @opts[:cookbook])
     end
 
     # Public - Tell Berkshelf to create a cookbook
@@ -14,22 +13,34 @@ module Souschef
     def berks_create
       remove_old_readme
       Souschef::Print.info 'Creating cookbook structure'
-      check_cookbook_dir
-      i, o, e, w = Open3.popen3(which_berks, 'cookbook', @opts[:cookbook])
-      i.close
-      e.close
+
+      i, o, e, w = Open3.popen3(berks_cmd)
       print_open3_stdout(o) if @opts[:verbose]
       remove_vagrantfile
+      print_open3_stdout(e)
+      i.close
       fail 'Berks failed' unless w.value == 0
     end
 
     private
 
+    # Private - Returns berkshelf command depending on the path
+    #
+    # Returns String
+    def berks_cmd
+      if @opts[:path] == Dir.pwd
+        "#{which_berks} cookbook #{@opts[:cookbook]} ."
+      else
+        path = @opts[:path].gsub("#{Dir.pwd}/", '')
+        "#{which_berks} cookbook #{@opts[:cookbook]} #{path}"
+      end
+    end
+
     # Private - Remove README from cookbook dir
     #
     # Returns nil
     def remove_old_readme
-      readme = File.join(Dir.pwd, @opts[:cookbook], 'README.md')
+      readme = File.join(@opts[:path], 'README.md')
       File.delete(readme) if File.exist?(readme)
     end
 
@@ -37,7 +48,7 @@ module Souschef
     #
     # Returns nil
     def remove_vagrantfile
-      vagrantfile = File.join(Dir.pwd, @opts[:cookbook], 'Vagrantfile')
+      vagrantfile = File.join(@opts[:path], 'Vagrantfile')
       File.delete(vagrantfile) if File.exist?(vagrantfile)
     end
 
@@ -77,14 +88,6 @@ module Souschef
     # Returns nil
     def info_msg(msg)
       puts msg.colorize(:yellow)
-    end
-
-    # Private - Check if the cookbook directory doesn't exist
-    #
-    # Returns nil
-    def check_cookbook_dir
-      Souschef::Print.info "Cookbook directory #{@opts[:cookbook]} exists" if
-      File.directory?(@cookbook_dir)
     end
   end
 end
