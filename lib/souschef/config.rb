@@ -9,12 +9,10 @@ module Souschef
       YAML.load_file(File.expand_path('~/.souschef.yml'))
     end
 
-    private
-
     # Private - Checks if we have a configuraiton file
     #
     # Returns nil
-    def verify_file
+    def self.verify_file
       conf = File.expand_path('~/.souschef.yml')
       fail "'~/.souschef.yml' missing!" unless File.exist?(conf)
     end
