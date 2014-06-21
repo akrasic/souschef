@@ -5,7 +5,18 @@ module Souschef
     #
     # Returns Hash
     def self.read
+      verify_file
       YAML.load_file(File.expand_path('~/.souschef.yml'))
+    end
+
+    private
+
+    # Private - Checks if we have a configuraiton file
+    #
+    # Returns nil
+    def verify_file
+      conf = File.expand_path('~/.souschef.yml')
+      fail "'~/.souschef.yml' missing!" unless File.exist?(conf)
     end
   end
 end
