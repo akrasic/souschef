@@ -57,6 +57,13 @@ module Souschef
       fail 'You need to specify the cookbook name' if @opts[:cookbook].nil?
     end
 
+    # Private - Verify Scaffold input
+    #
+    # Return nil
+    def verify_scaffold_input
+      fail 'Recipe name is missing for scaffold creation' if @opts[:recipe].nil?
+    end
+
     # Private - Adjust cookbook path
     #
     # Return nil
