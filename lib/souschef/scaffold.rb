@@ -52,6 +52,7 @@ module Souschef
       @recipe = @opts[:recipe]
       @cookbook = @metadata.name
       @maintainer = @metadata.maintainer
+      @license = @metadata.license
       @year = Time.now.year
 
       data = rfile.result(binding)

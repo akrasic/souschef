@@ -17,6 +17,9 @@ module Souschef
       def create
         tmpl = ERB.new(load_erb_file('metadata.erb'))
         @cookbook = @opts[:cookbook]
+        @maintainer = @opts[:souschef][:maintainer]
+        @maintainer_email = @opts[:souschef][:maintainer_email]
+        @license = @opts[:souschef][:license]
         data = tmpl.result(binding)
 
         Souschef::Print.info 'Updating metadata.rb'

@@ -13,6 +13,11 @@ options = Trollop::Parser.new do
   opt :verbose, 'Print out detailed information'
   opt :scaffold, 'Create recipe, chefspec and serverspec files for recipe'
   opt :recipe, 'Recipe name, used along with --scaffold', type: :string
+  opt :profile, 'Pick your configuration profile', default: 'default'
+  opt :configure, 'Create configuration file'
+  opt :maintainer, 'Maintainer name', type: :string
+  opt :maintainer_email, 'Maintainer email', type: :string
+  opt :license, 'Licese you want to use (MIT, Restricted)', type: :string
 end
 
 opts = Trollop.with_standard_exception_handling options do
@@ -21,20 +26,7 @@ opts = Trollop.with_standard_exception_handling options do
 end
 
 begin
-  if opts[:path]
-    opts[:path] = File.join(Dir.pwd, opts[:path])
-  else
-    opts[:path] = Dir.pwd
-  end
-
-  if opts[:scaffold]
-    Souschef::Scaffold.new(opts).start
-  else
-    Souschef::Berkshelf.new(opts).berks_create
-    Souschef::Gemfile.new(opts).write
-    Souschef::Testkitchen.new(opts).configure
-    Souschef::Template.run(opts)
-  end
+  Souschef::Runner.new(opts).run
 rescue RuntimeError => e
   Souschef::Print.error e
 end
