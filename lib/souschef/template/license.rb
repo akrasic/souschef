@@ -13,6 +13,8 @@ module Souschef
       # Returns nil
       def create
         tmpl = ERB.new(load_erb_file('license.erb'))
+        @year = Time.now.year
+        @maintainer = @opts[:souschef][:maintainer]
         data = tmpl.result(binding)
 
         Souschef::Print.info 'Updating LICENSE file'
