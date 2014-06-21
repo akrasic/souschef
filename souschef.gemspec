@@ -14,12 +14,13 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
-  s.executables      = s.files.grep(/^bin\//) { |f| File.basename(f) }
+  spec.executables   = spec.files.grep(/^bin\//) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(/^(test|spec|features)\//)
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.6'
   spec.add_development_dependency 'rake'
+  spec.add_dependency 'trollop'
   spec.add_dependency 'ruth'
   spec.add_dependency 'colorize'
   spec.add_dependency 'chef'
@@ -28,5 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rubocop'
   spec.add_dependency 'foodcritic'
   spec.add_dependency 'chefspec', '~> 4'
-  spec.add_dependency 'serverspec', '~> 3'
+  spec.add_dependency 'serverspec'
 end
