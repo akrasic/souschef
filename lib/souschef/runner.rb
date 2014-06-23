@@ -34,6 +34,10 @@ module Souschef
       Souschef::Gemfile.new(@opts).write
       Souschef::Testkitchen.new(@opts).configure
       Souschef::Template.run(@opts)
+      # Mock Scaffold to generate default recipe and tests
+      Souschef::Scaffold.new(path: @opts[:path],
+                             recipe: 'default',
+                             force: true).start
     end
 
     # Private - Verify @opts values
