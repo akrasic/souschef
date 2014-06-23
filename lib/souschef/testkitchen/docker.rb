@@ -33,7 +33,7 @@ module Souschef
       # Returns Hash
       def define_driver
         { 'name' => 'docker',
-          'privileged' => 'true'
+          'privileged' => true
         }
       end
 
@@ -41,14 +41,19 @@ module Souschef
       #
       # Returns Hash
       def define_provisioner
-        { 'name' => 'chef-zero' }
+        { 'name' => 'chef_zero',
+          'require_chef_omnibus' => 'latest' }
       end
 
       # Private - Define platforms configuration
       #
       # Returns Array
       def define_platforms
-        [define_centos_5, define_centos_6, define_run_list]
+        if define_run_list['run_list'].empty?
+          [define_centos_5, define_centos_6]
+        else
+          [define_centos_5, define_centos_6, define_run_list]
+        end
       end
 
       # Private - Define CentOS 5.10 platforms
@@ -58,8 +63,8 @@ module Souschef
         { 'name' => 'centos-5.10',
           'driver_config' => { 'image' => 'akrasic/centos5',
                                'platform' => 'centos',
-                               'use_sudo' => 'false',
-                               'privileged' => 'true' } }
+                               'use_sudo' => false,
+                               'privileged' => true } }
       end
 
       # Private - Define CentOS 6.4 platform
@@ -69,15 +74,15 @@ module Souschef
         { 'name' => 'centos-6.4',
           'driver_config' => { 'image' => 'centos:6.4',
                                'platform' => 'centos',
-                               'use_sudo' => 'false',
-                               'privileged' => 'true' } }
+                               'use_sudo' => false,
+                               'privileged' => true } }
       end
 
       # Private - Define Runlist for platforms
       #
       # Returs Hash
       def define_run_list
-        { 'run_list' => 'nil' }
+        { 'run_list' => '' }
       end
 
       # Private - Define suits
@@ -85,8 +90,7 @@ module Souschef
       # Returns Hash
       def define_suits
         [{ 'name' => 'default',
-           'run_list' => ["recipe[#{@cookbook}::default]"],
-           'attributes' => 'nil' }]
+           'run_list' => ["recipe[#{@cookbook}::default]"] }]
       end
     end
   end
