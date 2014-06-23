@@ -15,7 +15,7 @@ module Souschef
 
     def start
       check_cookbook_name
-      check_for_metadata
+      check_for_metadata unless @opts[:force]
       process_templates
     end
 
@@ -117,9 +117,16 @@ module Souschef
     #
     # Returns nil
     def write_file(file, data)
-      fail "#{file} already exists. Frozen in fear!" if File.exist?(file)
+      check_for_file(file) unless @opts[:force]
       fd = File.open(file, 'w')
       fd.write(data)
+    end
+
+    # Private - Exit if file exists
+    #
+    # Returns nil
+    def check_for_file(file)
+      fail "#{file} already exists. Frozen in fear!" if File.exist?(file)
     end
   end
 end

@@ -11,6 +11,7 @@ options = Trollop::Parser.new do
   opt :docker, 'Enable Docker for TestKitchen'
   opt :solusvm, 'Enable SoulsVM driver for TestKitchen'
   opt :verbose, 'Print out detailed information'
+  opt :force, 'Force create action'
   opt :scaffold, 'Create recipe, chefspec and serverspec files for recipe'
   opt :recipe, 'Recipe name, used along with --scaffold', type: :string
   opt :profile, 'Pick your configuration profile', default: 'default'
