@@ -76,9 +76,9 @@ module Souschef
     # Returns Hash
     def return_directories
       { recipe: File.join(@opts[:path], 'recipes'),
-        serverspec: File.join(@opts[:path], 'test', 'integration', 'default',
+        chefspec: File.join(@opts[:path], 'test', 'integration', 'default',
                               'serverspec', 'localhost'),
-        chefspec: File.join(@opts[:path], 'spec', 'unit') }
+        serverspec: File.join(@opts[:path], 'spec', 'unit') }
     end
 
     # Private - Get path to the recipes file
