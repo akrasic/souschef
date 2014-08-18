@@ -37,23 +37,20 @@ Currently available options:
 
 ```
 Options:
-          --cookbook, -c <s>:   Name of your cookbook
-              --path, -p <s>:   Define cookbook directory path (relative)
-                --docker, -d:   Enable Docker for TestKitchen
-               --solusvm, -s:   Enable SoulsVM driver for TestKitchen
-               --verbose, -v:   Print out detailed information
-              --scaffold, -a:   Create recipe, chefspec and serverspec files
-                                for recipe
-            --recipe, -r <s>:   Recipe name, used along with --scaffold
-           --profile, -o <s>:   Pick your configuration profile (default:
-                                default)
-             --configure, -n:   Create configuration file
-        --maintainer, -m <s>:   Maintainer name
-  --maintainer-email, -i <s>:   Maintainer email
-           --license, -l <s>:   Licese you want to use (MIT, Restricted)
-               --version, -e:   Print version and exit
-                  --help, -h:   Show this message
-
+          --cookbook <s>:   Name of your cookbook
+              --path <s>:   Define cookbook directory path (relative)
+       --testkitchen <s>:   Pick your additional configuration to create
+                            .kitchen.local.yml file
+              --scaffold:   Create recipe, chefspec and serverspec files for
+                            recipe
+            --recipe <s>:   Recipe name, used along with --scaffold
+           --profile <s>:   Pick your configuration profile (default: default)
+                 --force:   Force create action
+             --configure:   Create configuration file
+               --verbose:   Print out detailed information
+        --maintainer <s>:   Maintainer name
+  --maintainer-email <s>:   Maintainer email
+           --license <s>:   Licese you want to use, be explicit
 
 ```
 
@@ -73,6 +70,65 @@ Options:
 **Use scaffold to get you started writing a new recipe and tests**
 
 `souschef --scaffold --recipe install`
+
+# Profile support
+Souschef lets you one or several profiles/configurations under one roof, to get
+started simply configure it via:
+
+```
+souschef --configure --maintainer "YOUR NAME" \
+--maintainer-email "YOUR EMAIL" \
+--license "Restricted license, do not touch"
+```
+
+Profile configuration is written inside `~/.souschef.yml` file and can be easily
+edited by hand if needed.
+
+# Customization
+
+When creating a cookbook, Souschef will look first if a custom directory for the
+chosen profile exists - `~/.souschef/$PROFILE` and search if the template it is
+currently creating exists there - if so, it will be used instead of the bundled
+one.
+
+
+You can customize the default configuration that comes with few easy steps,
+below is an example for a custom recipe file
+
+**Create ~/.souschef/ directory for chosen profile**
+`mkdir -p ~/souschef/default/recipe`
+
+**Create your own rubocop.yml file**
+`vim ~/.shouschef/default/recipe/recipe.erb`
+
+**Run souschef command and you will see following in the output**
+```
+~> Create default[recipe] from /home/user/.souschef/default/recipe/recipe.erb
+```
+
+**Full directory structure of custom files**
+
+```
+├── chefspec                                                                                                                                                           
+│   ├── chefspec.erb                                                                                                                                                   
+│   └── spec_helper.rb                                                                                                                                                 
+├── gemfile.yml                                                                                                                                                        
+├── license.erb                                                                                                                                                        
+├── metadata.erb                                                                                                                                                       
+├── rakefile.erb                                                                                                                                                       
+├── readme.erb                                                                                                                                                         
+├── recipe                                                                                                                                                             
+│   └── recipe.erb                                                                                                                                                     
+├── rubocop                                                                                                                                                            
+│   └── rubocop.yml                                                                                                                                                    
+├── serverspec                                                                                                                                                         
+│   ├── serverspec.erb                                                                                                                                                 
+│   └── serverspec_helper.rb                                                                                                                                           
+└── testkitchen                                                                                                                                                        
+    └── kitchen.default.erb  
+```
+
+**
 
 ## Contributing
 
