@@ -22,7 +22,10 @@ Clone this repository and do:
 
 
 # Getting started
-First off you'd need to generate your configuration file that will hold data about your profile - `maintainer`, `maintainer_email` and `license` which is written to the `~/.souschef.yml` file. Additoinally, you can have several profiles specified by the `--profile` argument.
+First off you'd need to generate your configuration file that will hold data 
+about your profile - `maintainer`, `maintainer_email` and `license` which are
+written to the `~/.souschef.yml` file.
+Additionally, you can have several profiles specified by the `--profile` argument.
 
 **Creating default configuration**
 
@@ -96,12 +99,15 @@ You can customize the default configuration that comes with few easy steps,
 below is an example for a custom recipe file
 
 **Create ~/.souschef/ directory for chosen profile**
+
 `mkdir -p ~/souschef/default/recipe`
 
 **Create your own rubocop.yml file**
+
 `vim ~/.shouschef/default/recipe/recipe.erb`
 
 **Run souschef command and you will see following in the output**
+
 ```
 ~> Create default[recipe] from /home/user/.souschef/default/recipe/recipe.erb
 ```
