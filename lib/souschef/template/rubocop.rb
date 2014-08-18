@@ -11,7 +11,7 @@ module Souschef
       #
       # Returns nil
       def create
-        tmpl = ERB.new(load_erb_file('rubocop.yml'))
+        tmpl = ERB.new(load_erb_file('rubocop/rubocop.yml'))
         data = tmpl.result(binding)
 
         Souschef::Print.info 'Setting up Rubocop configuration'

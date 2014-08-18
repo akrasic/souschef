@@ -37,6 +37,7 @@ module Souschef
       # Mock Scaffold to generate default recipe and tests
       Souschef::Scaffold.new(path: @opts[:path],
                              recipe: 'default',
+                             profile: @opts[:profile],
                              force: true).start
     end
 

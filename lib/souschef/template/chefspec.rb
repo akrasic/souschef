@@ -1,7 +1,7 @@
 module Souschef
   class Template
     # Create spechelper for Chefspec
-    class Spechelper < Souschef::Template::Base
+    class Chefspec < Souschef::Template::Base
       def initialize(opts)
         super(opts)
       end
@@ -13,7 +13,7 @@ module Souschef
       def create
         spec_dir = File.join(@path, 'spec')
 
-        tmpl = ERB.new(load_erb_file('spec_helper.rb'))
+        tmpl = ERB.new(load_erb_file('chefspec/spec_helper.rb'))
         data = tmpl.result(binding)
 
         create_spec_dir(spec_dir) unless File.directory?(spec_dir)

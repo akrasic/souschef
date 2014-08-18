@@ -11,12 +11,20 @@ module Souschef
 
       private
 
-      # Private - Return location of file inside data/ directory
+      # Private - Return location of a custom template file if it exists, or
+      # return the default version
       #
       # Return String
       def datafile_path(file)
-        p = "../../../../data/#{file}"
-        File.expand_path(p, __FILE__)
+        local_profile = "~/.souschef/#{@opts[:profile]}/#{file}"
+        profile = File.expand_path(local_profile, __FILE__)
+
+        if File.exist?(profile)
+          profile
+        else
+          p = "../../../../data/#{file}"
+          File.expand_path(p, __FILE__)
+        end
       end
 
       # Private - Return path to the file inside cookbook directory

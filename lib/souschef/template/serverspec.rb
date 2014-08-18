@@ -15,7 +15,7 @@ module Souschef
                              'serverspec')
         spec_helper = File.join(spec_dir, 'spec_helper.rb')
 
-        tmpl = ERB.new(load_erb_file('serverspec_helper.rb'))
+        tmpl = ERB.new(load_erb_file('serverspec/serverspec_helper.rb'))
         data = tmpl.result(binding)
 
         create_spec_dir(spec_dir) unless File.directory?(spec_dir)

@@ -9,7 +9,6 @@ module Souschef
     def initialize(opts)
       @opts = opts
       @dir = Dir.pwd
-      @templates = return_templates
       metadata_info
     end
 
@@ -48,7 +47,8 @@ module Souschef
     #
     # Retunrns nil
     def create_recipe_file(type)
-      rfile = ERB.new(File.read(return_templates[type.to_sym]))
+      source = template_location(type)
+      rfile = ERB.new(File.read(source))
       @recipe = @opts[:recipe]
       @cookbook = @metadata.name
       @maintainer = @metadata.maintainer
@@ -57,18 +57,21 @@ module Souschef
 
       data = rfile.result(binding)
 
-      Souschef::Print.info "Creating #{opts[:recipe]} #{type} file"
+      Souschef::Print.info "Create #{@opts[:recipe]}[#{type}] from #{source}"
       check_for_directories(type)
       write_file(return_file_location(type), data)
     end
 
-    # Private - Return location of template files
+    # Private - Return location of the template file, depending if custom
+    # configuration is set under ~/.souschef/%profile%/ or use the default
+    # template provided by Souschef gem.
     #
-    # Returns Hash
-    def return_templates
-      { recipe:  File.expand_path('../../../data/recipe.erb', __FILE__),
-        serverspec: File.expand_path('../../../data/serverspec.erb', __FILE__),
-        chefspec: File.expand_path('../../../data/chefspec.erb', __FILE__) }
+    # Returns String
+    def template_location(type)
+      local = File.expand_path(
+        "~/.souschef/#{@opts[:profile]}/#{type}/#{type}.erb", __FILE__)
+      bundled = File.expand_path("../../../data/#{type}/#{type}.erb", __FILE__)
+      File.exist?(local) ? local : bundled
     end
 
     # Private - Return location of directories

@@ -3,7 +3,7 @@ require 'souschef/template/metadata'
 require 'souschef/template/license'
 require 'souschef/template/readme'
 require 'souschef/template/rubocop'
-require 'souschef/template/spec_helper'
+require 'souschef/template/chefspec'
 require 'souschef/template/serverspec'
 require 'souschef/template/rakefile'
 
@@ -15,7 +15,7 @@ module Souschef
     # Returns nil
     def self.run(opts)
       Souschef::Template::Rubocop.new(opts).create
-      Souschef::Template::Spechelper.new(opts).create
+      Souschef::Template::Chefspec.new(opts).create
       Souschef::Template::Serverspec.new(opts).create
       Souschef::Template::Metadata.new(opts).create
       Souschef::Template::License.new(opts).create
