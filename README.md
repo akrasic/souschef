@@ -116,7 +116,9 @@ following file and populate it with a valid YAML syntax.
 `souschef --cookbook mycb --testkitchen docker`
 
 Souschef will create following  standard `.kitchen.yml` file and
-`.kitchen.local.yml` holding your Docker configuration.
+`.kitchen.local.yml` holding your Docker configuration. If you have a custom
+`kitchen.default.erb` Souschef will use that to generate `.kitchen.yml` over the
+bundled template.
 
 # Customization
 
