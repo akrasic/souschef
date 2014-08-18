@@ -1,7 +1,0 @@
-# Chefspec testing for <%= @recipe %> recipe
-require 'spec_helper'
-
-# Start description
-describe '<%= @cookbook %>::<%= @recipe %>' do
-  let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
-end
