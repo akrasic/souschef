@@ -48,6 +48,15 @@ module Souschef
     # Retunrns nil
     def create_recipe_file(type)
       source = template_location(type)
+      Souschef::Print.info "Create #{@opts[:recipe]}[#{type}] from #{source}"
+      check_for_directories(type)
+      write_file(return_file_location(type), generate_template(source))
+    end
+
+    # Private - Generate the template
+    #
+    # Return String
+    def generate_template(source)
       rfile = ERB.new(File.read(source))
       @recipe = @opts[:recipe]
       @cookbook = @metadata.name
@@ -55,11 +64,7 @@ module Souschef
       @license = @metadata.license
       @year = Time.now.year
 
-      data = rfile.result(binding)
-
-      Souschef::Print.info "Create #{@opts[:recipe]}[#{type}] from #{source}"
-      check_for_directories(type)
-      write_file(return_file_location(type), data)
+      rfile.result(binding)
     end
 
     # Private - Return location of the template file, depending if custom
