@@ -16,6 +16,9 @@ options = Trollop::Parser.new do
   opt :force, 'Force create action'
   opt :configure, 'Create configuration file'
   opt :verbose, 'Print out detailed information'
+  opt :maintainer, 'Maintainer name', type: :string
+  opt :maintainer_email, 'Maintainer email', type: :string
+  opt :license, 'Licese you want to use (MIT, Restricted)', type: :string
 end
 
 opts = Trollop.with_standard_exception_handling options do
