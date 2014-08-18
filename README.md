@@ -96,12 +96,14 @@ If you are sporting Docker, DigitalOcean or any other TestKitchen driver please
 follow these steps to make it into your newly generated cookbook:
 
 **Create testkitchen directory for your profile**
+
 Assuming that your will be using this for the "default" profile, but adjust
 accordingly:
 
 `mkdir -p ~/.souschef/default/testkitchen/`
 
 **Create your new ERB driver configuration**
+
 To differentiate between drivers, TestKitchen template filename has the
 following format: kitchen.DRIVER.yml
 If you want to use your own Docker TestKitchen configuration please create
@@ -110,6 +112,7 @@ following file and populate it with a valid YAML syntax.
 `vim ~/.souschef/default/testkitchen/kitchen.docker.erb`
 
 **Create your new cookbook using TestKitchen Docker tempalte**
+
 `souschef --cookbook mycb --testkitchen docker`
 
 Souschef will create following  standard `.kitchen.yml` file and
