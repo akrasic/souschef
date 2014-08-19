@@ -27,6 +27,13 @@ module Souschef
         end
       end
 
+      # Private - Print out message if verbose option is selected
+      #
+      # Return nil
+      def info(msg)
+        Souschef::Print.info(msg) if @opts[:verbose]
+      end
+
       # Private - Return path to the file inside cookbook directory
       #
       # Return String
@@ -54,7 +61,7 @@ module Souschef
       #
       # Return nil
       def create_spec_dir(spec_dir)
-        Souschef::Print.info "Create #{spec_dir} directory"
+        info "Create #{spec_dir} directory"
         Dir.mkdir(spec_dir)
       end
     end

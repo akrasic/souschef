@@ -12,7 +12,7 @@ module Souschef
     #
     # Returns nil
     def write
-      Souschef::Print.info 'Populating Gemfile'
+      Souschef::Print.info 'Populating Gemfile' if @opts[:verbose]
       write_gemfile
     end
 

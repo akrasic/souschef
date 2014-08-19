@@ -59,7 +59,9 @@ module Souschef
 
       File.open(cb_file, 'w') { |f| f.write(process_template(source_file)) }
 
-      Souschef::Print.info "Creating Testkitchen #{type} configuration"
+      if @opts[:verbose]
+        Souschef::Print.info "Creating Testkitchen #{type} configuration"
+      end
     rescue TypeError
       Souschef::Print.error 'SKipping'
     end
@@ -102,8 +104,10 @@ module Souschef
         "../../../data/testkitchen/kitchen.#{type}.erb", __FILE__)
 
       if !File.exist?(local) && !File.exist?(bundled)
-        Souschef::Print.error "Missing custom configuration for TestKitchen \
+        if @opts[:verbose]
+          Souschef::Print.error "Missing custom configuration for TestKitchen \
 #{@opts[:testkitchen]} configuration"
+        end
       else
         File.exist?(local) ? local : bundled
       end

@@ -17,7 +17,7 @@ module Souschef
         @maintainer = @opts[:souschef][:maintainer]
         data = tmpl.result(binding)
 
-        Souschef::Print.info 'Updating LICENSE file'
+        info 'Updating LICENSE file'
         write_file(cookbook_file_path('LICENSE'), data)
       end
     end

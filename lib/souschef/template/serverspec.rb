@@ -19,7 +19,7 @@ module Souschef
         data = tmpl.result(binding)
 
         create_spec_dir(spec_dir) unless File.directory?(spec_dir)
-        Souschef::Print.info 'Creating Serverspec helper'
+        info 'Creating Serverspec helper'
         write_file(spec_helper, data)
       end
     end

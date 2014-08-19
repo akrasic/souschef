@@ -48,7 +48,8 @@ module Souschef
     # Retunrns nil
     def create_recipe_file(type)
       source = template_location(type)
-      Souschef::Print.info "Create #{@opts[:recipe]}[#{type}] from #{source}"
+      Souschef::Print.info("Create #{@opts[:recipe]}[#{type}] from #{source}"
+                          ) if @opts[:verbose]
       check_for_directories(type)
       write_file(return_file_location(type), generate_template(source))
     end
@@ -108,8 +109,12 @@ module Souschef
     # Return nil
     def check_for_directories(type)
       dir = return_directories[type.to_sym]
-      Souschef::Print.info "Creating missing directory #{dir}" unless
-      File.directory?(dir)
+
+      if @opts[:versbose]
+        unless File.directory?(dir)
+          Souschef::Print.info "Creating missing directory #{dir}"
+        end
+      end
       FileUtils.mkdir_p dir unless File.directory?(dir)
     end
 

@@ -16,7 +16,7 @@ module Souschef
         @maintainer_email = @opts[:souschef][:maintainer_email]
         data = tmpl.result(binding)
 
-        Souschef::Print.info 'Updating README file'
+        info 'Updating README file'
         write_file(cookbook_file_path('README.md'), data)
       end
     end

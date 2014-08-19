@@ -42,11 +42,12 @@ module Souschef
       Souschef::Template.run(@opts)
       # Mock Scaffold to generate default recipe and tests
 
-      Souschef::Print.header 'Default recipe'
+      Souschef::Print.header 'Create default recipe and tests'
       Souschef::Scaffold.new(path: @opts[:path],
                              recipe: 'default',
                              profile: @opts[:profile],
-                             force: true).start
+                             force: true,
+                             verbose: @opts[:verbose]).start
 
       Souschef::Print.header 'Testkitchen'
       Souschef::Testkitchen.new(@opts).setup

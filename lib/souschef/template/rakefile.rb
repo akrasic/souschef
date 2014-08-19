@@ -15,7 +15,7 @@ module Souschef
         tmpl = ERB.new(load_erb_file('rakefile.erb'))
         data = tmpl.result(binding)
 
-        Souschef::Print.info 'Setting up Rakefile'
+        info 'Setting up Rakefile'
         write_file(cookbook_file_path('Rakefile'), data)
       end
     end

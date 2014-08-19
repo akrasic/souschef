@@ -14,7 +14,7 @@ module Souschef
         tmpl = ERB.new(load_erb_file('rubocop/rubocop.yml'))
         data = tmpl.result(binding)
 
-        Souschef::Print.info 'Setting up Rubocop configuration'
+        info 'Setting up Rubocop configuration'
         write_file(cookbook_file_path('.rubocop.yml'), data)
       end
     end
