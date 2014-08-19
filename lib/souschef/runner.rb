@@ -13,12 +13,15 @@ module Souschef
     #
     # Returns nil
     def run
+      Souschef::Print.header "Using Souschef profile: #{opts[:profile]}"
+
       if @opts[:scaffold]
         Souschef::Scaffold.new(@opts).start
       elsif @opts[:configure]
         verify_configure_input
         Souschef::Configure::Yaml.new(@opts)
       else
+        Souschef::Print.header "Starting cookbook creation...\n"
         cookbook_runlist
       end
     end
@@ -30,14 +33,26 @@ module Souschef
     # Returns nil
     def cookbook_runlist
       verify_cookbook_creation
+
+      Souschef::Print.header 'Berkshelf configuration'
       Souschef::Berkshelf.new(@opts).berks_create
+      Souschef::Print.header 'Configure gemfile'
       Souschef::Gemfile.new(@opts).write
-      Souschef::Testkitchen.new(@opts).configure
+      Souschef::Print.header 'Create essential template files'
       Souschef::Template.run(@opts)
       # Mock Scaffold to generate default recipe and tests
+
+      Souschef::Print.header 'Create default recipe and tests'
       Souschef::Scaffold.new(path: @opts[:path],
                              recipe: 'default',
-                             force: true).start
+                             profile: @opts[:profile],
+                             force: true,
+                             verbose: @opts[:verbose]).start
+
+      Souschef::Print.header 'Testkitchen configuration'
+      Souschef::Testkitchen.new(@opts).setup
+
+      Souschef::Print.header "Don't forget to run bundle install!"
     end
 
     # Private - Verify @opts values

@@ -22,7 +22,7 @@ module Souschef
         @license = @opts[:souschef][:license]
         data = tmpl.result(binding)
 
-        Souschef::Print.info 'Updating metadata.rb'
+        info 'Updating metadata.rb'
         write_file(cookbook_file_path('metadata.rb'), data)
       end
     end

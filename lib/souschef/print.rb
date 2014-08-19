@@ -7,7 +7,16 @@ module Souschef
     #
     # Returns nil
     def self.info(msg)
-      puts "~> #{msg}".colorize(:yellow)
+      puts "~> #{msg}".colorize(:green)
+    end
+
+    # Public - Print header message
+    #
+    # msg - String message
+    #
+    # Returns nil
+    def self.header(msg)
+      puts "[*] #{msg}".colorize(:cyan)
     end
 
     # Public - Print error messate

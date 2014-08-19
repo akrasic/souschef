@@ -12,7 +12,7 @@ module Souschef
     # Returns nil
     def berks_create
       remove_old_readme
-      Souschef::Print.info 'Creating cookbook structure'
+      Souschef::Print.info 'Creating cookbook structure' if @opts[:verbose]
 
       i, o, e, w = Open3.popen3(berks_cmd)
       print_open3_stdout(o) if @opts[:verbose]

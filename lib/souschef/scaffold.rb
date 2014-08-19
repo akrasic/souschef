@@ -9,7 +9,6 @@ module Souschef
     def initialize(opts)
       @opts = opts
       @dir = Dir.pwd
-      @templates = return_templates
       metadata_info
     end
 
@@ -48,27 +47,37 @@ module Souschef
     #
     # Retunrns nil
     def create_recipe_file(type)
-      rfile = ERB.new(File.read(return_templates[type.to_sym]))
+      source = template_location(type)
+      Souschef::Print.info("Create #{@opts[:recipe]}[#{type}] from #{source}"
+                          ) if @opts[:verbose]
+      check_for_directories(type)
+      write_file(return_file_location(type), generate_template(source))
+    end
+
+    # Private - Generate the template
+    #
+    # Return String
+    def generate_template(source)
+      rfile = ERB.new(File.read(source))
       @recipe = @opts[:recipe]
       @cookbook = @metadata.name
       @maintainer = @metadata.maintainer
       @license = @metadata.license
       @year = Time.now.year
 
-      data = rfile.result(binding)
-
-      Souschef::Print.info "Creating #{opts[:recipe]} #{type} file"
-      check_for_directories(type)
-      write_file(return_file_location(type), data)
+      rfile.result(binding)
     end
 
-    # Private - Return location of template files
+    # Private - Return location of the template file, depending if custom
+    # configuration is set under ~/.souschef/%profile%/ or use the default
+    # template provided by Souschef gem.
     #
-    # Returns Hash
-    def return_templates
-      { recipe:  File.expand_path('../../../data/recipe.erb', __FILE__),
-        serverspec: File.expand_path('../../../data/serverspec.erb', __FILE__),
-        chefspec: File.expand_path('../../../data/chefspec.erb', __FILE__) }
+    # Returns String
+    def template_location(type)
+      local = File.expand_path(
+        "~/.souschef/#{@opts[:profile]}/#{type}/#{type}.erb", __FILE__)
+      bundled = File.expand_path("../../../data/#{type}/#{type}.erb", __FILE__)
+      File.exist?(local) ? local : bundled
     end
 
     # Private - Return location of directories
@@ -100,8 +109,12 @@ module Souschef
     # Return nil
     def check_for_directories(type)
       dir = return_directories[type.to_sym]
-      Souschef::Print.info "Creating missing directory #{dir}" unless
-      File.directory?(dir)
+
+      if @opts[:versbose]
+        unless File.directory?(dir)
+          Souschef::Print.info "Creating missing directory #{dir}"
+        end
+      end
       FileUtils.mkdir_p dir unless File.directory?(dir)
     end
 
