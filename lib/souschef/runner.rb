@@ -49,7 +49,7 @@ module Souschef
                              force: true,
                              verbose: @opts[:verbose]).start
 
-      Souschef::Print.header 'Testkitchen'
+      Souschef::Print.header 'Testkitchen configuration'
       Souschef::Testkitchen.new(@opts).setup
 
       Souschef::Print.header "Don't forget to run bundle install!"
