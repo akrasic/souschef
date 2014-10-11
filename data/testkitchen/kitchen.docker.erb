@@ -1,0 +1,21 @@
+---
+driver:
+  name: docker
+  use_sudo: false
+
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: latest
+
+platforms:
+  - name: centos-5.10
+    driver_config:
+      image: centos:centos5
+  - name: centos-6.4
+    driver_config:
+      image: centos:centos6
+suites:
+  - name: default
+    run_list:
+      - recipe[<%= @cookbook %>::default]
+    attributes:
