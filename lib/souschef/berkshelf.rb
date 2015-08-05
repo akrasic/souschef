@@ -29,10 +29,10 @@ module Souschef
     # Returns String
     def berks_cmd
       if @opts[:path] == Dir.pwd
-        "#{which_berks} cookbook #{@opts[:cookbook]} ."
+        "yes | #{which_berks} cookbook #{@opts[:cookbook]} ."
       else
         path = @opts[:path].gsub("#{Dir.pwd}/", '')
-        "#{which_berks} cookbook #{@opts[:cookbook]} #{path}"
+        "yes | #{which_berks} cookbook #{@opts[:cookbook]} #{path}"
       end
     end
 
