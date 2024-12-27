@@ -1,5 +1,6 @@
 [package]
 name = "souschef"
+description = "CLI utility to interact with Chef Server."
 version = "0.1.0"
 edition = "2021"
 authors = ["Antun Krasic <antun.krasic@gmail.com>"]
