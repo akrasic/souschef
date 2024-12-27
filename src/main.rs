@@ -1,4 +1,3 @@
-// use base64::{engine::general_purpose::STANDARD as BASE64, Engine};
 use clap::Parser;
 use std::error::Error;
 
