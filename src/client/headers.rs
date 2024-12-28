@@ -8,7 +8,7 @@ use std::error::Error;
 use std::fs;
 use std::str::FromStr;
 
-/// sign_request - Create signed
+/// sign_request - Create signed headers encrypted with the users `client_key`
 pub fn sign_request(
     key_path: &str,
     node_name: &str,
@@ -17,9 +17,21 @@ pub fn sign_request(
     body: &str,
     timestamp: &str,
 ) -> Result<String, Box<dyn Error>> {
-    let key_content = fs::read_to_string(key_path)?;
-    let key = PKey::private_key_from_pem(key_content.as_bytes())?;
-    let rsa = key.rsa()?;
+    // Read the client key
+    let client_key_content = match fs::read_to_string(key_path) {
+        Ok(s) => s,
+        Err(e) => return Err(format!("opening {}: {}", key_path, e).into()),
+    };
+
+    let key = match PKey::private_key_from_pem(client_key_content.as_bytes()) {
+        Ok(k) => k,
+        Err(e) => return Err(format!("reading private key from PEM {}: {}", key_path, e).into()),
+    };
+
+    let rsa = match key.rsa() {
+        Ok(r) => r,
+        Err(e) => return Err(format!("reading RSA key {}: {}", key_path, e).into()),
+    };
 
     let hashed_path = BASE64.encode(openssl::hash::hash(MessageDigest::sha1(), path.as_bytes())?);
     let ops_content_hash =
@@ -51,6 +63,8 @@ pub fn sign_request(
     Ok(BASE64.encode(buf))
 }
 
+/// request_headers - creates Chef specific request headers to authenticate with the Chef Server
+/// API for your request.
 pub fn request_headers(
     config: &KnifeConfig,
     request_path: &str,

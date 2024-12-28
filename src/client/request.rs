@@ -5,12 +5,14 @@ use std::error::Error;
 
 use super::headers::request_headers;
 
+/// Chef Server API resonse that returns the HTTP reponse status and
+/// parsed body as `String`
 pub struct ChefServerResponse {
     pub status: u16,
     pub body: String,
 }
 
-/// get - issues a GET request to Chef Server API
+/// get - issues a GET request to Chef Server API returning the `ChefServerResponse` struct
 pub async fn get(
     config: &KnifeConfig,
     request_path: &str,
