@@ -60,7 +60,7 @@ impl NodeAttribute {
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-struct SearchResult {
+pub struct SearchResult {
     total: u16,
     start: u16,
     rows: Vec<SearchNode>,
