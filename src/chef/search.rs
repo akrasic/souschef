@@ -61,38 +61,38 @@ impl NodeAttribute {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SearchResult {
-    total: u16,
-    start: u16,
-    rows: Vec<SearchNode>,
+    pub total: u16,
+    pub start: u16,
+    pub rows: Vec<SearchNode>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SearchNode {
-    automatic: SearchNodeAutomatic,
-    chef_environment: String,
-    name: String,
-    run_list: Vec<String>,
+    pub automatic: SearchNodeAutomatic,
+    pub chef_environment: String,
+    pub name: String,
+    pub run_list: Vec<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SearchNodeAutomatic {
     #[serde(default)]
-    ipaddress: String,
+    pub ipaddress: String,
 
     #[serde[default]]
-    hostname: String,
+    pub hostname: String,
 
     #[serde[default]]
-    platform: String,
+    pub platform: String,
 
     #[serde[default]]
-    platform_family: String,
+    pub platform_family: String,
 
     #[serde[default]]
-    platform_version: String,
+    pub platform_version: String,
 
     #[serde[default]]
-    roles: Vec<String>,
+    pub roles: Vec<String>,
 }
 
 impl SearchNode {
