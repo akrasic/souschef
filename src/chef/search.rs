@@ -131,35 +131,32 @@ impl SearchNode {
     }
 }
 
+/// display_search_nodes- Calls Chef server and issues as search for the node objects, and displaysthem
+pub async fn display_search_nodes(config: &KnifeConfig, query: &str, attributes: &[String]) {
+    match search_nodes(config, query).await {
+        Ok(nodes) => nodes.rows.iter().for_each(|n| n.display(attributes)),
+        Err(e) => {
+            println!("Error during search: {}", e);
+        }
+    }
+}
+
 /// search_nodes - Calls Chef server and issues as search for the node objects
 pub async fn search_nodes(
     config: &KnifeConfig,
     query: &str,
-    attributes: &[String],
-) -> Result<(), Box<dyn Error>> {
+) -> Result<SearchResult, Box<dyn Error>> {
     let request_path = format!("/organizations/{}/search/node", config.organization);
 
     match client::request::get(config, &request_path, query).await {
         Ok(k) => {
-            let start_timer = std::time::Instant::now();
-            let body: SearchResult = serde_json::from_str(&k.body)?;
+            let body: SearchResult = match serde_json::from_str(&k.body) {
+                Ok(body) => body,
+                Err(e) => return Err(format!("parsing return JSON: {}", e).into()),
+            };
 
-            let elapsed = start_timer.elapsed();
-            println!("JSON parsing took: {}ms", elapsed.as_millis());
-
-            // Display the results
-            body.rows.iter().for_each(|n| n.display(attributes));
-
-            println!("Total: {}", body.total);
-            if !attributes.is_empty() {
-                println!("{:?}", attributes);
-            }
+            Ok(body)
         }
-        Err(e) => {
-            println!("error: {}", e);
-            return Ok(());
-        }
+        Err(e) => Err(format!("erro sending search request {}: {}", query, e).into()),
     }
-
-    Ok(())
 }

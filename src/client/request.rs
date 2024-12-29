@@ -34,7 +34,7 @@ pub async fn get(
     let full_url = base_url.join(request_path)?;
     let headers = request_headers(config, request_path, "GET")?;
 
-    let start_timer = std::time::Instant::now();
+    // let start_timer = std::time::Instant::now();
     let response = client
         .get(full_url)
         .query(&query_params)
@@ -42,12 +42,13 @@ pub async fn get(
         .send()
         .await?;
 
-    println!("{}", response.status());
+    // println!("{}", response.status());
     let status = response.status().as_u16();
     let body = response.text().await?;
 
-    let duration = start_timer.elapsed();
-    println!("Request took: {}ms", duration.as_millis());
+    // Get verbose
+    // let duration = start_timer.elapsed();
+    // println!("Request took: {}ms", duration.as_millis());
 
     let resp = ChefServerResponse { status, body };
 

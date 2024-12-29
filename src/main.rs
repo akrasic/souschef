@@ -60,7 +60,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         },
 
         cli::Commands::Search { query, attributes } => {
-            chef::search::search_nodes(&config, &query, &attributes).await?;
+            chef::search::display_search_nodes(&config, &query, &attributes).await;
         }
     }
 
