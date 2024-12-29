@@ -145,7 +145,7 @@ pub async fn display_search_nodes(config: &KnifeConfig, query: &str, attributes:
 pub async fn search_nodes(
     config: &KnifeConfig,
     query: &str,
-) -> Result<SearchResult, Box<dyn Error>> {
+) -> Result<SearchResult, Box<dyn Error + Send + Sync>> {
     let request_path = format!("/organizations/{}/search/node", config.organization);
 
     match client::request::get(config, &request_path, query).await {

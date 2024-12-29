@@ -17,7 +17,7 @@ pub async fn get(
     config: &KnifeConfig,
     request_path: &str,
     query: &str,
-) -> Result<ChefServerResponse, Box<dyn Error>> {
+) -> Result<ChefServerResponse, Box<dyn Error + Send + Sync>> {
     let client = reqwest::ClientBuilder::new()
         .http1_title_case_headers()
         .danger_accept_invalid_certs(true)

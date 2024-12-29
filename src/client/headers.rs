@@ -16,7 +16,7 @@ pub fn sign_request(
     path: &str,
     body: &str,
     timestamp: &str,
-) -> Result<String, Box<dyn Error>> {
+) -> Result<String, Box<dyn Error + Send + Sync>> {
     // Read the client key
     let client_key_content = match fs::read_to_string(key_path) {
         Ok(s) => s,
@@ -69,7 +69,7 @@ pub fn request_headers(
     config: &KnifeConfig,
     request_path: &str,
     request_type: &str,
-) -> Result<HeaderMap, Box<dyn Error>> {
+) -> Result<HeaderMap, Box<dyn Error + Send + Sync>> {
     let timestamp = Utc::now().format("%Y-%m-%dT%H:%M:%SZ").to_string();
 
     let signature = sign_request(
