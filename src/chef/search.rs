@@ -59,6 +59,7 @@ impl NodeAttribute {
     }
 }
 
+/// Chef API reponse mapping for search object
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SearchResult {
     pub total: u16,
@@ -74,24 +75,43 @@ pub struct SearchNode {
     pub run_list: Vec<String>,
 }
 
+/// Collects relevant fields from the `automatic` key from Chef API response
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SearchNodeAutomatic {
     #[serde(default)]
     pub ipaddress: String,
 
-    #[serde[default]]
+    #[serde(default)]
+    pub macaddress: String,
+
+    #[serde(default)]
     pub hostname: String,
 
-    #[serde[default]]
+    #[serde(default)]
+    pub os: String,
+
+    #[serde(default)]
+    pub os_version: String,
+
+    #[serde(default)]
+    pub machinename: String,
+
+    #[serde(default)]
+    pub fqdn: String,
+
+    #[serde(default)]
     pub platform: String,
 
-    #[serde[default]]
+    #[serde(default)]
     pub platform_family: String,
 
-    #[serde[default]]
+    #[serde(default)]
     pub platform_version: String,
 
-    #[serde[default]]
+    #[serde(default)]
+    pub recipes: Vec<String>,
+
+    #[serde(default)]
     pub roles: Vec<String>,
 }
 
