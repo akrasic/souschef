@@ -16,7 +16,7 @@ enum KnifeConfigError {
     OrganizationExtractFailed { server_url: String },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct KnifeConfig {
     pub node_name: String,
     pub client_key: String,
