@@ -6,7 +6,7 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 enum KnifeConfigError {
-    #[error("Error reading {config_file}: {reason}")]
+    #[error("Error reading configuration file: {config_file}: {reason}")]
     ReadingConfigurationFile {
         config_file: PathBuf,
         reason: String,
@@ -59,10 +59,11 @@ impl KnifeConfig {
             }
         };
 
-        // Extract Chef server configuration files from knife.rb ,f
-        let node_name_re = Regex::new(r#"node_name\s+['"](.+?)['"]"#)?;
-        let client_key_re = Regex::new(r#"client_key\s+['"](.+?)['"]"#)?;
-        let server_url_re = Regex::new(r#"chef_server_url\s+['"](.+?)['"]"#)?;
+        // Extract Chef server configuration files from knife.rb
+        let node_name_re = Regex::new(r#"(?m)^\s*node_name\s*['"]([^'"]+)['"]"#)?;
+        let client_key_re = Regex::new(r#"(?m)^\s*client_key\s*['"]([^'"]+)['"]"#)?;
+        // let server_url_re = Regex::new(r#"(?m)^(?!\s*#)\s*chef_server_url\s*['"]([^'"]+)['"]""#)?;
+        let server_url_re = Regex::new(r#"(?m)^\s*chef_server_url\s*['"]([^'"]+)['"]"#)?;
 
         let node_name = node_name_re
             .captures(&content)
