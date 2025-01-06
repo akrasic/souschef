@@ -4,7 +4,6 @@ use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt;
-use tokio::io::copy_bidirectional_with_sizes;
 
 /// NodeAttribute enumerator has the filtering deny_unknown_fields
 /// for the search action.
