@@ -4,6 +4,7 @@ use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt;
+use tokio::io::copy_bidirectional_with_sizes;
 
 /// NodeAttribute enumerator has the filtering deny_unknown_fields
 /// for the search action.
@@ -169,14 +170,21 @@ pub async fn search_nodes(
     let request_path = format!("/organizations/{}/search/node", config.organization);
 
     match client::request::get(config, &request_path, query).await {
-        Ok(k) => {
-            let body: SearchResult = match serde_json::from_str(&k.body) {
-                Ok(body) => body,
-                Err(e) => return Err(format!("parsing return JSON: {}", e).into()),
-            };
+        Ok(k) => match k.status {
+            200 => {
+                let body: SearchResult = match serde_json::from_str(&k.body) {
+                    Ok(body) => body,
+                    Err(e) => return Err(format!("parsing return JSON: {}", e).into()),
+                };
 
-            Ok(body)
-        }
+                Ok(body)
+            }
+            _ => {
+                println!("HTTP Status code: {}", k.status);
+                println!("Body returned: {:#?}", k.body);
+                Err(format!("HTTP Status: {}", k.status).into())
+            }
+        },
         Err(e) => Err(format!("erro sending search request {}: {}", query, e).into()),
     }
 }
