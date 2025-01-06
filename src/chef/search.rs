@@ -60,14 +60,14 @@ impl NodeAttribute {
 }
 
 /// Chef API reponse mapping for search object
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
 pub struct SearchResult {
     pub total: u16,
     pub start: u16,
     pub rows: Vec<SearchNode>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
 pub struct SearchNode {
     pub automatic: SearchNodeAutomatic,
     pub chef_environment: String,
@@ -76,7 +76,7 @@ pub struct SearchNode {
 }
 
 /// Collects relevant fields from the `automatic` key from Chef API response
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
 pub struct SearchNodeAutomatic {
     #[serde(default)]
     pub ipaddress: String,
