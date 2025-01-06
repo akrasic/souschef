@@ -44,6 +44,14 @@ pub enum Commands {
         #[arg(short = 'a', long="attribute", num_args = 1..)]
         attributes: Vec<String>,
     },
+
+    Ssh {
+        query: String,
+        command: String,
+
+        #[arg(short = 'x', long = "ssh-user")]
+        user: Option<String>,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -58,7 +66,15 @@ pub enum DataCommands {
 pub enum NodeCommands {
     List,
 
-    Show { node_id: String },
+    Show {
+        node_id: String,
+    },
+
+    Ssh {
+        node_id: String,
+        #[arg(short = 'x', long = "ssh-user")]
+        user: Option<String>,
+    },
 }
 
 #[derive(Subcommand, Debug)]

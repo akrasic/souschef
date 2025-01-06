@@ -47,6 +47,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
             cli::NodeCommands::Show { node_id } => {
                 chef::node::node_show(&config, &node_id).await?;
             }
+            cli::NodeCommands::Ssh { node_id, user } => {
+                chef::node::node_ssh(&config, &node_id, user).await?;
+            }
         },
 
         cli::Commands::Role { command } => match command {
@@ -61,6 +64,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
         cli::Commands::Search { query, attributes } => {
             chef::search::display_search_nodes(&config, &query, &attributes).await;
+        }
+
+        cli::Commands::Ssh {
+            query,
+            command,
+            user,
+        } => {
+            chef::ssh::ssh_nodes(&config, &query, &command, user).await?;
         }
     }
 
