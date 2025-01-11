@@ -184,6 +184,6 @@ pub async fn search_nodes(
                 Err(format!("HTTP Status: {}", k.status).into())
             }
         },
-        Err(e) => Err(format!("erro sending search request {}: {}", query, e).into()),
+        Err(e) => Err(format!("search {}: {}", query, e).into()),
     }
 }
