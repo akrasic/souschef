@@ -12,11 +12,8 @@ pub async fn ssh_nodes(
 ) -> Result<(), Box<dyn Error>> {
     match search_nodes(config, query).await {
         Ok(nodes) => {
-            let nodes: Vec<String> = nodes
-                .rows
-                .iter()
-                .map(|n| n.automatic.ipaddress.clone())
-                .collect();
+            // let nodes: Vec<String> = nodes.rrows.iter().map(|n| n.ipaddress.clone()).collect();
+            let nodes: Vec<String> = nodes.iter().map(|n| n.ipaddress.clone()).collect();
 
             let k = call_ssh(nodes, command, user).await.unwrap();
             Ok(k)

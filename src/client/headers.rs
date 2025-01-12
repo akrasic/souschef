@@ -68,16 +68,22 @@ pub fn sign_request(
 pub fn request_headers(
     config: &KnifeConfig,
     request_path: &str,
-    request_type: &str,
+    http_method: &str,
+    request_body: Option<String>,
 ) -> Result<HeaderMap, Box<dyn Error + Send + Sync>> {
     let timestamp = Utc::now().format("%Y-%m-%dT%H:%M:%SZ").to_string();
+
+    let body: String = match request_body {
+        Some(b) => b,
+        None => "".to_string(),
+    };
 
     let signature = sign_request(
         &config.client_key,
         &config.node_name,
-        request_type,
+        http_method,
         request_path,
-        "",
+        &body,
         &timestamp,
     )?;
 
@@ -103,7 +109,8 @@ pub fn request_headers(
 
     // X-Ops-Content-Hash
     // Hash the body.
-    let x_ops_content_hash = BASE64.encode(openssl::hash::hash(MessageDigest::sha1(), b"")?);
+    let x_ops_content_hash =
+        BASE64.encode(openssl::hash::hash(MessageDigest::sha1(), body.as_bytes())?);
     headers.insert(
         "X-Ops-Content-Hash",
         HeaderValue::from_str(&x_ops_content_hash)?,

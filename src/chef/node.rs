@@ -58,7 +58,7 @@ pub async fn node_ssh(
                 200 => {
                     let node: SearchNode = serde_json::from_str(&n.body)?;
 
-                    open_ssh_connection(node.automatic.ipaddress, user).await?;
+                    open_ssh_connection(node.ipaddress, user).await?;
                 }
                 404 => {
                     println!("Node not found: {}", node_id);
