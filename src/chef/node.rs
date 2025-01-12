@@ -1,7 +1,102 @@
+use super::search::ChefSearchResponseRaw;
+use crate::{chef::search::SearchNode, client, config::KnifeConfig};
+use colored::Colorize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{error::Error, process::Stdio};
 
-use crate::{chef::search::SearchNode, client, config::KnifeConfig};
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
+pub struct ChefNode {
+    pub automatic: ChefNodeAutomatic,
+    pub chef_environment: String,
+    pub name: String,
+    pub run_list: Vec<String>,
+}
+
+/// Collects relevant fields from the `automatic` key from Chef API response
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
+pub struct ChefNodeAutomatic {
+    #[serde(default)]
+    pub ipaddress: String,
+
+    #[serde(default)]
+    pub macaddress: String,
+
+    #[serde(default)]
+    pub hostname: String,
+
+    #[serde(default)]
+    pub os: String,
+
+    #[serde(default)]
+    pub os_version: String,
+
+    #[serde(default)]
+    pub machinename: String,
+
+    #[serde(default)]
+    pub fqdn: String,
+
+    #[serde(default)]
+    pub platform: String,
+
+    #[serde(default)]
+    pub platform_family: String,
+
+    #[serde(default)]
+    pub platform_version: String,
+
+    #[serde(default)]
+    pub recipes: Vec<String>,
+
+    #[serde(default)]
+    pub roles: Vec<String>,
+}
+
+impl ChefNode {
+    pub fn display(&self) {
+        println!("{}:        {}", "Node name".green().bold(), self.name);
+        println!(
+            "{}:       {}",
+            "IP Address".green().bold(),
+            self.automatic.ipaddress
+        );
+        println!(
+            "{}: {}",
+            "Chef Environment".green().bold(),
+            self.chef_environment
+        );
+        println!(
+            "{}:            {}",
+            "Roles".green().bold(),
+            self.automatic.roles.join(", ")
+        );
+        println!(
+            "{}:         {}",
+            "Run List".green().bold(),
+            self.run_list.join(", ")
+        );
+
+        println!(
+            "{}:          {}",
+            "Recipes".green().bold(),
+            self.automatic.recipes.join(", ")
+        );
+
+        println!(
+            "{}:          {}",
+            "Platform".green().bold(),
+            self.automatic.platform_family
+        );
+
+        println!(
+            "{}:  {}",
+            "Platform version".green().bold(),
+            self.automatic.platform_version
+        );
+        println!("\n");
+    }
+}
 
 pub async fn node_list(config: &KnifeConfig) -> Result<(), Box<dyn Error>> {
     let request_path = format!("/organizations/{}/nodes", config.organization);
@@ -30,8 +125,8 @@ pub async fn node_show(config: &KnifeConfig, node_id: &str) -> Result<(), Box<dy
                     println!("Node not found: {}", node_id);
                 }
                 200 => {
-                    let node: SearchNode = serde_json::from_str(&n.body)?;
-                    node.display(&Vec::with_capacity(0));
+                    let node: ChefNode = serde_json::from_str(&n.body)?;
+                    node.display();
                 }
                 _ => {
                     println!("Unkown status code: {}", n.status)
@@ -56,9 +151,9 @@ pub async fn node_ssh(
         Ok(n) => {
             match n.status {
                 200 => {
-                    let node: SearchNode = serde_json::from_str(&n.body)?;
+                    let node: ChefNode = serde_json::from_str(&n.body)?;
 
-                    open_ssh_connection(node.ipaddress, user).await?;
+                    open_ssh_connection(node.automatic.ipaddress, user).await?;
                 }
                 404 => {
                     println!("Node not found: {}", node_id);
