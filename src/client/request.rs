@@ -94,13 +94,9 @@ pub async fn post(
         query_params.insert("rows", "1000");
     }
 
-    println!("Query_Params: {:?}", query_params);
     let base_url = url::Url::parse(&config.chef_server_url)?;
     let full_url = base_url.join(request_path)?;
     let headers = request_headers(config, request_path, "POST", Some(body.clone()))?;
-
-    println!("{}", full_url);
-    println!("{}", body);
 
     // let start_timer = std::time::Instant::now();
     let response = client
