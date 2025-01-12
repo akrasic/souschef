@@ -1,5 +1,4 @@
-use super::search::ChefSearchResponseRaw;
-use crate::{chef::search::SearchNode, client, config::KnifeConfig};
+use crate::{client, config::KnifeConfig};
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
