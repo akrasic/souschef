@@ -14,6 +14,7 @@ enum NodeAttribute {
     Name,
     Platform,
     Roles,
+    Recipes,
 }
 
 /// Display implementation to give a &str value to a Enum type
@@ -26,6 +27,7 @@ impl std::fmt::Display for NodeAttribute {
             NodeAttribute::Name => "Name",
             NodeAttribute::Platform => "Platform",
             NodeAttribute::Roles => "Roles",
+            NodeAttribute::Recipes => "Recipes",
         };
 
         write!(f, "{}", display_str)
@@ -42,19 +44,21 @@ impl NodeAttribute {
             "name" => Some(Self::Name),
             "platform" => Some(Self::Platform),
             "roles" => Some(Self::Roles),
+            "recipes" => Some(Self::Recipes),
             _ => None,
         }
     }
 
-    // get_value returns the value from the SearchNode struct
-    // to the associated Enum field
-    fn get_value(&self, node: &SearchNode) -> String {
+    /// display - pretty prints the SearchNode items
+    fn display(&self, node: &SearchNode) {
         match self {
-            Self::IPAddress => node.ipaddress.clone(),
-            Self::ChefEnvironment => node.chef_environment.clone(),
-            Self::Name => node.name.clone(),
-            Self::Platform => node.platform.clone(),
-            Self::Roles => node.roles.join(", "),
+            Self::Name => node.display_node_name(),
+
+            Self::IPAddress => node.display_ipaddress(),
+            Self::ChefEnvironment => node.display_chef_environment(),
+            Self::Roles => node.display_roles(),
+            Self::Platform => node.display_platform(),
+            Self::Recipes => node.display_recipes(),
         }
     }
 }
@@ -67,130 +71,159 @@ pub struct SearchResult {
     pub rows: Vec<SearchNode>,
 }
 
+// Flat Search
+
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
 pub struct SearchNode {
+    /// Chef environment
     pub chef_environment: String,
+
+    /// Node name
     pub name: String,
+
+    /// Node run_list items
     pub run_list: Vec<String>,
+
+    /// Node IP address
     #[serde(default)]
     pub ipaddress: String,
 
+    /// MAC Address
     #[serde(default)]
     pub macaddress: String,
 
+    /// Detected hostname
     #[serde(default)]
     pub hostname: String,
 
+    /// Operating system
     #[serde(default)]
     pub os: String,
 
+    /// Operating Sytem version
     #[serde(default)]
     pub os_version: String,
 
+    /// Machine name
     #[serde(default)]
     pub machinename: String,
 
+    /// FQDN
     #[serde(default)]
     pub fqdn: String,
 
+    /// OS Platform
     #[serde(default)]
     pub platform: String,
 
+    /// Platform Family
     #[serde(default)]
     pub platform_family: String,
 
+    /// Platform version
     #[serde(default)]
     pub platform_version: String,
 
+    /// List of recipes in the node
     #[serde(default)]
     pub recipes: Vec<String>,
 
-    #[serde(default)]
-    pub roles: Vec<String>,
-}
-/*
-#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
-pub struct SearchNodeOld {
-    pub automatic: SearchNodeAutomatic,
-    pub chef_environment: String,
-    pub name: String,
-    pub run_list: Vec<String>,
-}
-*/
-
-/// Collects relevant fields from the `automatic` key from Chef API response
-#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
-pub struct SearchNodeAutomatic {
-    #[serde(default)]
-    pub ipaddress: String,
-
-    #[serde(default)]
-    pub macaddress: String,
-
-    #[serde(default)]
-    pub hostname: String,
-
-    #[serde(default)]
-    pub os: String,
-
-    #[serde(default)]
-    pub os_version: String,
-
-    #[serde(default)]
-    pub machinename: String,
-
-    #[serde(default)]
-    pub fqdn: String,
-
-    #[serde(default)]
-    pub platform: String,
-
-    #[serde(default)]
-    pub platform_family: String,
-
-    #[serde(default)]
-    pub platform_version: String,
-
-    #[serde(default)]
-    pub recipes: Vec<String>,
-
+    /// List of roles assigned to the node
     #[serde(default)]
     pub roles: Vec<String>,
 }
 
 impl SearchNode {
+    /// display - A CLI friendy CLI display the Node information
     pub fn display(&self, attributes: &[String]) {
         if attributes.is_empty() {
-            println!("{}:        {}", "Node name".green().bold(), self.name);
-            println!("{}:       {}", "IP Address".green().bold(), self.ipaddress);
-            println!(
-                "{}: {}",
-                "Chef Environment".green().bold(),
-                self.chef_environment
-            );
-            println!(
-                "{}:            {}",
-                "Roles".green().bold(),
-                self.roles.join(", ")
-            );
-            println!(
-                "{}:         {}",
-                "Run List".green().bold(),
-                self.run_list.join(", ")
-            );
+            self.display_node_name();
+            self.display_ipaddress();
+            self.display_chef_environment();
+            self.display_roles();
+            self.display_runlist();
+            self.display_recipes();
+            self.display_platform_family();
+            self.display_platform_version();
 
             println!("\n");
         } else {
+            println!("{}", self.name);
             for attribute in attributes {
                 if let Some(attr) = NodeAttribute::from_str(attribute) {
-                    println!("{}: {}", attr, attr.get_value(self));
+                    attr.display(self);
                 }
-            }
+            } // end forloop
+            println!("\n");
         }
+    }
+
+    fn display_node_name(&self) {
+        println!("{}:        {}", "Node name".green().bold(), self.name);
+    }
+
+    fn display_ipaddress(&self) {
+        println!("{}:       {}", "IP Address".green().bold(), self.ipaddress);
+    }
+
+    fn display_chef_environment(&self) {
+        println!(
+            "{}: {}",
+            "Chef Environment".green().bold(),
+            self.chef_environment
+        );
+    }
+
+    fn display_roles(&self) {
+        println!(
+            "{}:            {}",
+            "Roles".green().bold(),
+            self.roles.join(", ")
+        );
+    }
+
+    fn display_platform(&self) {
+        println!(
+            "{}:          {}",
+            "Platform".green().bold(),
+            self.platform_family
+        );
+    }
+
+    fn display_runlist(&self) {
+        println!(
+            "{}:         {}",
+            "Run List".green().bold(),
+            self.run_list.join(", ")
+        );
+    }
+
+    fn display_recipes(&self) {
+        println!(
+            "{}:          {}",
+            "Recipes".green().bold(),
+            self.recipes.join(", ")
+        );
+    }
+
+    fn display_platform_family(&self) {
+        println!(
+            "{}:          {}",
+            "Platform".green().bold(),
+            self.platform_family
+        );
+    }
+
+    fn display_platform_version(&self) {
+        println!(
+            "{}:  {}",
+            "Platform version".green().bold(),
+            self.platform_version
+        );
     }
 }
 
-// Temp
+// Chef Search POST mapping body.
 #[derive(Serialize, Deserialize)]
 pub struct ChefSearchResponseRaw {
     #[serde(default)]
@@ -202,6 +235,7 @@ pub struct ChefSearchResponseRaw {
     pub rows: Vec<ChefNodeRowRaw>,
 }
 
+/// Row mapping, cotains the URL and data fields
 #[derive(Serialize, Deserialize)]
 pub struct ChefNodeRowRaw {
     #[serde(default)]
@@ -254,6 +288,7 @@ pub struct NodeDocumentRaw {
     pub roles: Option<Vec<String>>,
 }
 
+/// Implement From<> to convert the multi-layer `ChefNodeRowRaw` into a flat `SearchNode` struct
 impl From<ChefNodeRowRaw> for SearchNode {
     fn from(raw: ChefNodeRowRaw) -> Self {
         SearchNode {
@@ -279,12 +314,9 @@ impl From<ChefNodeRowRaw> for SearchNode {
 /// display_search_nodes- Calls Chef server and issues as search for the node objects, and displaysthem
 pub async fn display_search_nodes(config: &KnifeConfig, query: &str, attributes: &[String]) {
     match search_nodes(config, query).await {
-        Ok(nodes) => {
-            // nodes.rows.iter().for_each(|n| n.display(attributes))
-            for n in nodes {
-                println!("{}", n.name);
-            }
-        }
+        // Print the output
+        Ok(nodes) => nodes.iter().for_each(|n| n.display(attributes)),
+
         Err(e) => {
             println!("Error during search: {}", e);
         }
@@ -301,8 +333,6 @@ pub async fn search_nodes(
     match client::request::post(config, &request_path, query).await {
         Ok(k) => match k.status {
             200 => {
-                //:w
-                // println!("{:#?}", k.body);
                 let body: ChefSearchResponseRaw = match serde_json::from_str(&k.body) {
                     Ok(body) => body,
                     Err(e) => return Err(format!("parsing return JSON: {}", e).into()),
@@ -312,6 +342,16 @@ pub async fn search_nodes(
 
                 Ok(nodes)
             }
+
+            400 => Err(
+                "HTTP Status: 400 - Request parameters or body have missing or invalid fields"
+                    .into(),
+            ),
+
+            401 => Err("HTTP Status: 401 - failed authentication!".into()),
+            403 => Err("HTTP Code: 403 . Permission denied".into()),
+            404 => Err("HTTP Code: 404 . Resource does not exist.".into()),
+            406 => Err("HTTP Code: 406. Accept header does not include application/json".into()),
             _ => {
                 println!("HTTP Status code: {}", k.status);
                 println!("Body returned: {:#?}", k.body);
@@ -320,25 +360,4 @@ pub async fn search_nodes(
         },
         Err(e) => Err(format!("search {}: {}", query, e).into()),
     }
-
-    /*
-    match client::request::get(config, &request_path, query).await {
-        Ok(k) => match k.status {
-            200 => {
-                let body: SearchResult = match serde_json::from_str(&k.body) {
-                    Ok(body) => body,
-                    Err(e) => return Err(format!("parsing return JSON: {}", e).into()),
-                };
-
-                Ok(body)
-            }
-            _ => {
-                println!("HTTP Status code: {}", k.status);
-                println!("Body returned: {:#?}", k.body);
-                Err(format!("HTTP Status: {}", k.status).into())
-            }
-        },
-        Err(e) => Err(format!("search {}: {}", query, e).into()),
-    }
-    */
 }
