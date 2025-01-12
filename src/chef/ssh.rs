@@ -15,8 +15,10 @@ pub async fn ssh_nodes(
             // let nodes: Vec<String> = nodes.rrows.iter().map(|n| n.ipaddress.clone()).collect();
             let nodes: Vec<String> = nodes.iter().map(|n| n.ipaddress.clone()).collect();
 
-            let k = call_ssh(nodes, command, user).await.unwrap();
-            Ok(k)
+            match call_ssh(nodes, command, user).await {
+                Ok(()) => Ok(()),
+                Err(e) => Err(format!("ssh: {}", e).into()),
+            }
         }
         Err(e) => Err(format!("Problems during search. {}", e).into()),
     }
@@ -62,7 +64,7 @@ pub async fn execute_ssh_command(
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     let connection_string = match user {
         Some(u) => format!("{}@{}", u, host),
-        None => format!("{}", host),
+        None => host.to_string(),
     };
 
     match openssh::Session::connect(connection_string, openssh::KnownHosts::Accept).await {
