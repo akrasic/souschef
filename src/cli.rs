@@ -64,12 +64,13 @@ pub enum DataCommands {
 
 #[derive(Subcommand, Debug)]
 pub enum NodeCommands {
+    /// List all the nodes from Chef Server
     List,
 
-    Show {
-        node_id: String,
-    },
+    /// Show node information
+    Show { node_id: String },
 
+    /// SSH into the node
     Ssh {
         node_id: String,
         #[arg(short = 'x', long = "ssh-user")]
@@ -79,21 +80,28 @@ pub enum NodeCommands {
 
 #[derive(Subcommand, Debug)]
 pub enum EnvironmentCommands {
+    /// List environments
     List,
 
+    /// Show environment
     Show { environment_id: String },
 }
 
 #[derive(Subcommand, Debug)]
 pub enum RoleCommands {
+    /// List roles
     List,
 
+    /// Show role
     Show { role_id: String },
 }
 
 #[derive(Subcommand, Debug)]
 pub enum DataBagCommands {
+    /// List data bags
     List,
+
+    /// Show data bag
     Show {
         databag_id: String,
 
