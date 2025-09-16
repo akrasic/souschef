@@ -19,6 +19,11 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
+    Cookbook {
+        #[command(subcommand)]
+        command: CookbookCommands,
+    },
+
     Data {
         #[command(subcommand)]
         command: DataCommands,
@@ -54,12 +59,27 @@ pub enum Commands {
     },
 }
 
+// Data bag enum
+
 #[derive(Subcommand, Debug)]
 pub enum DataCommands {
     Bag {
         #[command(subcommand)]
         command: DataBagCommands,
+
+        /// Secret to encrypt
+        #[arg(long = "secret")]
+        secret: Option<String>,
+
+        /// Path to the secret_file
+        #[arg(long = "secret-file")]
+        secret_file: Option<String>,
     },
+}
+
+#[derive(Subcommand, Debug)]
+pub enum CookbookCommands {
+    List,
 }
 
 #[derive(Subcommand, Debug)]
@@ -98,6 +118,19 @@ pub enum RoleCommands {
 
 #[derive(Subcommand, Debug)]
 pub enum DataBagCommands {
+    /// Encrypts the file using the secret-file
+    EncryptFile { json_file: String },
+
+    /// Decrypts the file using the secret-file
+    DecryptFile { encrypted_file: String },
+
+    /// Reads the encrypted file, decrypts it and uploads it as a databag item to Chef
+    /// using the secret-file
+    UploadEncryptedItem {
+        databag: String,
+        encrypted_file: String,
+    },
+
     /// List data bags
     List,
 

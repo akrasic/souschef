@@ -22,6 +22,7 @@ pub struct KnifeConfig {
     pub client_key: String,
     pub chef_server_url: String,
     pub organization: String,
+    pub secret_file: Option<String>,
 }
 
 impl KnifeConfig {
@@ -62,8 +63,8 @@ impl KnifeConfig {
         // Extract Chef server configuration files from knife.rb
         let node_name_re = Regex::new(r#"(?m)^\s*node_name\s*['"]([^'"]+)['"]"#)?;
         let client_key_re = Regex::new(r#"(?m)^\s*client_key\s*['"]([^'"]+)['"]"#)?;
-        // let server_url_re = Regex::new(r#"(?m)^(?!\s*#)\s*chef_server_url\s*['"]([^'"]+)['"]""#)?;
         let server_url_re = Regex::new(r#"(?m)^\s*chef_server_url\s*['"]([^'"]+)['"]"#)?;
+        let secret_file_re = Regex::new(r"knife\[:secret_file\]\s*=\s*'([^']*)'")?;
 
         let node_name = node_name_re
             .captures(&content)
@@ -79,6 +80,16 @@ impl KnifeConfig {
             .captures(&content)
             .ok_or("chef_server_url not found")?[1]
             .to_string();
+
+        let secret_file = match secret_file_re.captures(&content) {
+            Some(captures) => {
+                let cap = captures
+                    .get(1)
+                    .map_or("".to_string(), |m| m.as_str().to_string());
+                Some(cap)
+            }
+            None => None,
+        };
 
         // Extract the organization from the chef_server_url
         let organization = match chef_server_url.split("/").last() {
@@ -106,6 +117,7 @@ impl KnifeConfig {
             client_key,
             chef_server_url,
             organization,
+            secret_file,
         })
     }
 }
