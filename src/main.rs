@@ -90,9 +90,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
             chef::ssh::ssh_nodes(&config, &query, &command, user).await?;
         }
 
-        cli::Commands::Cookbook { command } => {
-            println!("These are cookbook commands: {:#?}", command)
-        }
+        cli::Commands::Cookbook { command } => match command {
+            cli::CookbookCommands::List => {
+                chef::cookbook::list(&config).await?;
+            }
+            cli::CookbookCommands::Show {
+                cookbook_id,
+                version,
+            } => {
+                chef::cookbook::show(&config, &cookbook_id, version).await?;
+            }
+        },
     }
 
     Ok(())

@@ -79,7 +79,17 @@ pub enum DataCommands {
 
 #[derive(Subcommand, Debug)]
 pub enum CookbookCommands {
+    /// List all cookbooks
     List,
+
+    /// Show cookbook details or versions
+    Show {
+        cookbook_id: String,
+
+        /// Specific version to show
+        #[arg(short = 'v', long = "version")]
+        version: Option<String>,
+    },
 }
 
 #[derive(Subcommand, Debug)]
