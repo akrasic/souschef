@@ -4,19 +4,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
 
-/// CookbookVersions represents the list of versions for a cookbook
-#[derive(Deserialize, Serialize, Debug)]
-pub struct CookbookVersions {
-    pub url: String,
-    pub versions: Vec<CookbookVersion>,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct CookbookVersion {
-    pub url: String,
-    pub version: String,
-}
-
 /// CookbookDetail represents detailed information about a specific cookbook version
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CookbookDetail {
@@ -89,19 +76,22 @@ impl CookbookDetail {
 
         if !self.recipes.is_empty() {
             let recipe_names: Vec<&str> = self.recipes.iter().map(|r| r.name.as_str()).collect();
-            println!("{}:      {}", "Recipes".green().bold(), recipe_names.join(", "));
+            println!(
+                "{}:      {}",
+                "Recipes".green().bold(),
+                recipe_names.join(", ")
+            );
         }
 
-        if self.dependencies.is_object() {
-            if let Some(deps) = self.dependencies.as_object() {
-                if !deps.is_empty() {
-                    let dep_list: Vec<String> = deps
-                        .iter()
-                        .map(|(k, v)| format!("{} ({})", k, v.as_str().unwrap_or("any")))
-                        .collect();
-                    println!("{}: {}", "Dependencies".green().bold(), dep_list.join(", "));
-                }
-            }
+        if self.dependencies.is_object()
+            && let Some(deps) = self.dependencies.as_object()
+            && !deps.is_empty()
+        {
+            let dep_list: Vec<String> = deps
+                .iter()
+                .map(|(k, v)| format!("{} ({})", k, v.as_str().unwrap_or("any")))
+                .collect();
+            println!("{}: {}", "Dependencies".green().bold(), dep_list.join(", "));
         }
 
         println!();
@@ -120,19 +110,17 @@ pub async fn list(config: &KnifeConfig) -> Result<(), Box<dyn Error>> {
                 if let Some(obj) = cookbooks.as_object() {
                     for (cookbook_name, versions_info) in obj {
                         // Extract the latest version if available
-                        if let Some(versions) = versions_info.get("versions") {
-                            if let Some(versions_arr) = versions.as_array() {
-                                if let Some(latest) = versions_arr.first() {
-                                    if let Some(version) = latest.get("version") {
-                                        println!(
-                                            "{} ({})",
-                                            cookbook_name,
-                                            version.as_str().unwrap_or("unknown")
-                                        );
-                                        continue;
-                                    }
-                                }
-                            }
+                        if let Some(versions) = versions_info.get("versions")
+                            && let Some(versions_arr) = versions.as_array()
+                            && let Some(latest) = versions_arr.first()
+                            && let Some(version) = latest.get("version")
+                        {
+                            println!(
+                                "{} ({})",
+                                cookbook_name,
+                                version.as_str().unwrap_or("unknown")
+                            );
+                            continue;
                         }
                         println!("{}", cookbook_name);
                     }
@@ -162,7 +150,10 @@ pub async fn show(
 }
 
 /// show_cookbook_versions - Lists all versions of a specific cookbook
-async fn show_cookbook_versions(config: &KnifeConfig, cookbook: &str) -> Result<(), Box<dyn Error>> {
+async fn show_cookbook_versions(
+    config: &KnifeConfig,
+    cookbook: &str,
+) -> Result<(), Box<dyn Error>> {
     let request_path = format!(
         "/organizations/{}/cookbooks/{}",
         config.organization, cookbook
@@ -176,16 +167,14 @@ async fn show_cookbook_versions(config: &KnifeConfig, cookbook: &str) -> Result<
                 println!("{}: {}", "Cookbook".green().bold(), cookbook);
                 println!("{}:", "Versions".green().bold());
 
-                if let Some(obj) = cookbook_info.as_object() {
-                    if let Some(cookbook_data) = obj.get(cookbook) {
-                        if let Some(versions) = cookbook_data.get("versions") {
-                            if let Some(versions_arr) = versions.as_array() {
-                                for version_info in versions_arr {
-                                    if let Some(version) = version_info.get("version") {
-                                        println!("  - {}", version.as_str().unwrap_or("unknown"));
-                                    }
-                                }
-                            }
+                if let Some(obj) = cookbook_info.as_object()
+                    && let Some(cookbook_data) = obj.get(cookbook)
+                    && let Some(versions) = cookbook_data.get("versions")
+                    && let Some(versions_arr) = versions.as_array()
+                {
+                    for version_info in versions_arr {
+                        if let Some(version) = version_info.get("version") {
+                            println!("  - {}", version.as_str().unwrap_or("unknown"));
                         }
                     }
                 }
