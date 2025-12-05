@@ -1,3 +1,5 @@
+pub mod cookbook;
+pub mod crypt;
 pub mod databag;
 pub mod environment;
 pub mod node;

@@ -16,7 +16,23 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     match cli_options.command {
         cli::Commands::Data { command } => match command {
-            cli::DataCommands::Bag { command } => match command {
+            cli::DataCommands::Bag {
+                command,
+                secret,
+                secret_file,
+            } => match command {
+                cli::DataBagCommands::EncryptFile { json_file } => {
+                    chef::crypt::encrypt_file(&config, json_file)?;
+                }
+                cli::DataBagCommands::DecryptFile { encrypted_file } => {
+                    chef::crypt::decrypt_file(&config, encrypted_file)?;
+                }
+                cli::DataBagCommands::UploadEncryptedItem {
+                    databag,
+                    encrypted_file,
+                } => {
+                    println!("{} >> {}", databag, encrypted_file)
+                }
                 cli::DataBagCommands::List => {
                     chef::databag::list(&config).await?;
                     println!("List data bag");
@@ -73,6 +89,18 @@ async fn main() -> Result<(), Box<dyn Error>> {
         } => {
             chef::ssh::ssh_nodes(&config, &query, &command, user).await?;
         }
+
+        cli::Commands::Cookbook { command } => match command {
+            cli::CookbookCommands::List => {
+                chef::cookbook::list(&config).await?;
+            }
+            cli::CookbookCommands::Show {
+                cookbook_id,
+                version,
+            } => {
+                chef::cookbook::show(&config, &cookbook_id, version).await?;
+            }
+        },
     }
 
     Ok(())
