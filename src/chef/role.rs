@@ -1,17 +1,6 @@
 use crate::{client, config::KnifeConfig, parse::traverse_json};
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
-
-#[derive(Serialize, Deserialize, Debug)]
-struct ChefRole {
-    name: String,
-    description: String,
-    run_list: Vec<String>,
-    default_attributes: Value,
-    override_attributes: Value,
-    env_run_lists: Value,
-}
 
 /// lists roles
 pub async fn list(config: &KnifeConfig) -> Result<(), Box<dyn Error>> {
