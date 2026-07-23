@@ -2,6 +2,17 @@
 
 CLI utility to interact with Chef server
 
+# Install
+
+Install the latest release from [crates.io](https://crates.io/crates/souschef) with Cargo:
+
+```
+cargo install souschef
+```
+
+This builds and installs the `souschef` binary into `~/.cargo/bin`. Make sure that
+directory is on your `PATH`.
+
 # Chef server API docs
 
 https://chef-server-api-docs.chef.io/
