@@ -6,7 +6,7 @@ use std::error::Error;
 
 use super::headers::request_headers;
 
-/// Chef Server API resonse that returns the HTTP reponse status and
+/// Chef Server API response that returns the HTTP response status and
 /// parsed body as `String`
 pub struct ChefServerResponse {
     pub status: u16,
@@ -35,7 +35,6 @@ pub async fn get(
     let full_url = base_url.join(request_path)?;
     let headers = request_headers(config, request_path, "GET", None)?;
 
-    // let start_timer = std::time::Instant::now();
     let response = client
         .get(full_url)
         .query(&query_params)
@@ -43,20 +42,14 @@ pub async fn get(
         .send()
         .await?;
 
-    // println!("{}", response.status());
     let status = response.status().as_u16();
     let body = response.text().await?;
 
-    // Get verbose
-    // let duration = start_timer.elapsed();
-    // println!("Request took: {}ms", duration.as_millis());
-
-    let resp = ChefServerResponse { status, body };
-
-    Ok(resp)
+    Ok(ChefServerResponse { status, body })
 }
 
-/// get - issues a GET request to Chef Server API returning the `ChefServerResponse` struct
+/// post - issues a POST request to Chef Server API for search operations
+/// Uses a predefined request body for node search with field mappings
 pub async fn post(
     config: &KnifeConfig,
     request_path: &str,
@@ -68,7 +61,6 @@ pub async fn post(
         .build()?;
 
     let request_body = json!({
-
         "node_name": ["name"],
         "chef_environment": ["chef_environment"],
         "hostname": ["hostname"],
@@ -98,7 +90,6 @@ pub async fn post(
     let full_url = base_url.join(request_path)?;
     let headers = request_headers(config, request_path, "POST", Some(body.clone()))?;
 
-    // let start_timer = std::time::Instant::now();
     let response = client
         .post(full_url)
         .query(&query_params)
@@ -107,15 +98,89 @@ pub async fn post(
         .send()
         .await?;
 
-    // println!("{}", response.status());
     let status = response.status().as_u16();
     let body = response.text().await?;
 
-    // Get verbose
-    // let duration = start_timer.elapsed();
-    // println!("Request took: {}ms", duration.as_millis());
+    Ok(ChefServerResponse { status, body })
+}
 
-    let resp = ChefServerResponse { status, body };
+/// post_body - issues a POST request with a custom JSON body
+/// Used for creating new resources like data bag items
+pub async fn post_body(
+    config: &KnifeConfig,
+    request_path: &str,
+    body: &str,
+) -> Result<ChefServerResponse, Box<dyn Error + Send + Sync>> {
+    let client = reqwest::ClientBuilder::new()
+        .http1_title_case_headers()
+        .danger_accept_invalid_certs(true)
+        .build()?;
 
-    Ok(resp)
+    let base_url = url::Url::parse(&config.chef_server_url)?;
+    let full_url = base_url.join(request_path)?;
+    let headers = request_headers(config, request_path, "POST", Some(body.to_string()))?;
+
+    let response = client
+        .post(full_url)
+        .headers(headers)
+        .body(body.to_string())
+        .send()
+        .await?;
+
+    let status = response.status().as_u16();
+    let body = response.text().await?;
+
+    Ok(ChefServerResponse { status, body })
+}
+
+/// put - issues a PUT request to Chef Server API
+/// Used for updating existing resources like data bag items
+pub async fn put(
+    config: &KnifeConfig,
+    request_path: &str,
+    body: &str,
+) -> Result<ChefServerResponse, Box<dyn Error + Send + Sync>> {
+    let client = reqwest::ClientBuilder::new()
+        .http1_title_case_headers()
+        .danger_accept_invalid_certs(true)
+        .build()?;
+
+    let base_url = url::Url::parse(&config.chef_server_url)?;
+    let full_url = base_url.join(request_path)?;
+    let headers = request_headers(config, request_path, "PUT", Some(body.to_string()))?;
+
+    let response = client
+        .put(full_url)
+        .headers(headers)
+        .body(body.to_string())
+        .send()
+        .await?;
+
+    let status = response.status().as_u16();
+    let body = response.text().await?;
+
+    Ok(ChefServerResponse { status, body })
+}
+
+/// delete - issues a DELETE request to Chef Server API
+/// Used for removing resources
+pub async fn delete(
+    config: &KnifeConfig,
+    request_path: &str,
+) -> Result<ChefServerResponse, Box<dyn Error + Send + Sync>> {
+    let client = reqwest::ClientBuilder::new()
+        .http1_title_case_headers()
+        .danger_accept_invalid_certs(true)
+        .build()?;
+
+    let base_url = url::Url::parse(&config.chef_server_url)?;
+    let full_url = base_url.join(request_path)?;
+    let headers = request_headers(config, request_path, "DELETE", None)?;
+
+    let response = client.delete(full_url).headers(headers).send().await?;
+
+    let status = response.status().as_u16();
+    let body = response.text().await?;
+
+    Ok(ChefServerResponse { status, body })
 }

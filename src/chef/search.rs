@@ -63,14 +63,6 @@ impl NodeAttribute {
     }
 }
 
-/// Chef API reponse mapping for search object
-#[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
-pub struct SearchResult {
-    pub total: u16,
-    pub start: u16,
-    pub rows: Vec<SearchNode>,
-}
-
 // Flat Search
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]

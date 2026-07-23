@@ -1,16 +1,6 @@
 use crate::{client, config::KnifeConfig, parse::traverse_json};
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
-
-#[derive(Serialize, Deserialize, Debug)]
-struct ChefEnvironment {
-    name: String,
-    description: String,
-    cookbook_versions: Value,
-    default_attributes: Value,
-    override_attributes: Value,
-}
 
 /// list - Lists environments
 pub async fn list(config: &KnifeConfig) -> Result<(), Box<dyn Error>> {
